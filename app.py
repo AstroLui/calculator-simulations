@@ -1,17 +1,22 @@
 import flet as ft
 from flet import View
+from classApp.WidgetClass import Button, ViewClass
 from flet import RouteChangeEvent, ViewPopEvent
+import yaml
+
+with open('config.yml', 'r') as file:
+    config = yaml.safe_load(file)
 
 # VARIABLES GLOBALES
     # ALINIAMIENTO
 ALIGN_VERT = ft.MainAxisAlignment.CENTER
 ALIGN_HOR = ft.CrossAxisAlignment.CENTER
     # TAMAÑO DE LA VENTANA
-WIDTH = 300
-HEIGHT = 600
+WIDTH = config['size']['width']
+HEIGHT = config['size']['height']
     # COLORES DE LA APP
-COLOR_PRIMARY = '#d3ee98'
-COLOR_SECOND = '#784ca8'
+COLOR_PRIMARY = config['colors']['primary']
+COLOR_SECOND = config['colors']['second']
 
 def main(page: ft.Page):
     page.title = "Calculator Simulations"
@@ -23,31 +28,15 @@ def main(page: ft.Page):
 
         # Home
         page.views.append(
-            View(
-                route='/',
-                controls=[
-                    ft.ElevatedButton(text="Go to Sample Router", on_click=lambda _: page.go('/sample'), bgcolor=COLOR_SECOND, color=COLOR_PRIMARY)
-                ],
-                bgcolor= COLOR_PRIMARY,
-                vertical_alignment=ALIGN_VERT,
-                horizontal_alignment=ALIGN_HOR
-            )
+            ViewClass('/', [Button('Go to Router Sample', lambda _: page.go('/sample'))])
         )
         
         # Sample Router
         if page.route == '/sample':
             page.views.append(
-            View(
-                route='/sample',
-                controls=[
-                    ft.ElevatedButton(text="Go to Home", on_click=lambda _: page.go('/'), bgcolor=COLOR_SECOND, color=COLOR_PRIMARY)
-                ],
-                bgcolor= COLOR_PRIMARY,
-                vertical_alignment=ALIGN_VERT,
-                horizontal_alignment=ALIGN_HOR
+                ViewClass('/sample', [Button('Go to home', lambda _: page.go('/home'))])
             )
-        )
-    
+
         page.update()
     
     def view_pop(e: ViewPopEvent):
