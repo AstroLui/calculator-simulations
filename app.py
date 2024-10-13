@@ -1,6 +1,6 @@
 import flet as ft
 from flet import View
-from classApp.WidgetClass import Button, ViewClass, Field
+from classApp.WidgetClass import Button, ViewClass, Field, Text
 from flet import RouteChangeEvent, ViewPopEvent
 import yaml
 
@@ -18,28 +18,32 @@ HEIGHT = config['size']['height']
 COLOR_PRIMARY = config['colors']['primary']
 COLOR_SECOND = config['colors']['second']
 
-def main(page: ft.Page):
+def main(page: ft.Page) -> None:
     page.title = "Calculator Simulations"
     page.window.height = HEIGHT
     page.window.width = WIDTH
     
-    def router_change(e: RouteChangeEvent):
+    def router_change(e: RouteChangeEvent) -> None:
         page.views.clear()
 
-        # Home
+        # Home --> Menu
         page.views.append(
-            ViewClass('/', [Button('Go to Router Sample', lambda _: page.go('/sample'))])
+            ViewClass('/', 
+                [
+                    Text("Menu", 40),
+                    Button('Go to Router Sample', lambda _: page.go('/sample'))
+                ])
         )
         
         # Sample Router
         if page.route == '/sample':
             page.views.append(
-                ViewClass('/sample', [Button('Go to home', lambda _: page.go('/home')), Field('Sample Field')])
+                ViewClass('/sample', [Text("Sample", 40), Field('Sample Field'), Button('Go to home', lambda _: page.go('/home'))])
             )
 
         page.update()
     
-    def view_pop(e: ViewPopEvent):
+    def view_pop(e: ViewPopEvent) -> None:
         page.views.pop()
         top_view: View = page.views[-1]
         page.go(top_view.route)
