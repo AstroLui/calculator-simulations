@@ -34,15 +34,35 @@ def main(page: ft.Page) -> None:
                 [
                     ft.Column([Text("Welcome to", 20, "w150"), Text("Menu", 35, "w800")], 
                     spacing=0, horizontal_alignment=ALIGN_HOR),
-                    Button('Go to Router Sample', lambda _: page.go('/sample'))
+                    # Cada 3 se crea una nueva row
+                    ft.Row([
+                            Button('Go to Router Sample', lambda _: page.go('/sample')),
+                            Button('Reaccion Quimica', lambda _: page.go('/quimica')),
+                            Button('Reactor Nuclear', lambda _: page.go('/nuclear'))
+                        ], 
+                    spacing=10, alignment=ALIGN_VERT)
                 ])
         )
         
         # Sample Router
         if page.route == '/sample':
             page.views.append(
-                ViewClass('/sample', [Text("Sample", 40, "w800"), Field('Sample Field'), Button('Go to home', lambda _: page.go('/home'))])
+                ViewClass('/sample', [Text("Sample", 40, "w800"), Field('Sample Field'), Button('Go to menu', lambda _: page.go('/home'))])
             )
+
+        # Quimica
+        if page.route == '/quimica':
+            page.views.append(
+                ViewClass('quimica', [Text('Quimica', 40, "w800"), Button('Go to menu', lambda _: page.go('/home'))])
+            )
+
+        # Nuclear
+        if page.route == '/nuclear':
+            page.views.append(
+                ViewClass('nuclear', [Text('Nuclear', 40, "w800"), Button('Go to menu', lambda _: page.go('/home'))])
+            )
+
+
 
         page.update()
     
