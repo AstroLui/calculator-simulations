@@ -60,15 +60,18 @@ class Field(ft.Container):
                 border_color=COLOR_SECOND,
                 text_align= ALIGN_VERT,
                 text_size=config['input']['text-size'],
-                height=config['input']['height']
+                height=config['input']['height'],
+                width=config['input']['width']
             )
         ], spacing=5)
         self.padding=10
 
 class Text(ft.Text):
-    def __init__(self, value: str, size: int):
+    def __init__(self, value: str, size: int, weight: str):
         super().__init__()
         self.value = value
         self.size = size
         self.color = COLOR_SECOND
         self.bgcolor = COLOR_PRIMARY
+        self.weight = weight
+    
