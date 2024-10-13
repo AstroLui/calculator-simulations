@@ -22,7 +22,9 @@ def main(page: ft.Page) -> None:
     page.title = "Calculator Simulations"
     page.window.height = HEIGHT
     page.window.width = WIDTH
-    
+    page.window.center()
+    page.window.resizable = False
+
     def router_change(e: RouteChangeEvent) -> None:
         page.views.clear()
 
@@ -30,7 +32,8 @@ def main(page: ft.Page) -> None:
         page.views.append(
             ViewClass('/', 
                 [
-                    Text("Menu", 40),
+                    ft.Column([Text("Welcome to", 20, "w150"), Text("Menu", 35, "w800")], 
+                    spacing=0, horizontal_alignment=ALIGN_HOR),
                     Button('Go to Router Sample', lambda _: page.go('/sample'))
                 ])
         )
@@ -38,7 +41,7 @@ def main(page: ft.Page) -> None:
         # Sample Router
         if page.route == '/sample':
             page.views.append(
-                ViewClass('/sample', [Text("Sample", 40), Field('Sample Field'), Button('Go to home', lambda _: page.go('/home'))])
+                ViewClass('/sample', [Text("Sample", 40, "w800"), Field('Sample Field'), Button('Go to home', lambda _: page.go('/home'))])
             )
 
         page.update()
