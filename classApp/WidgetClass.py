@@ -17,7 +17,7 @@ STATE = ft.ControlState
 
 #CLASE BOTON
 class Button(ft.ElevatedButton):
-    def __init__(self, text, click_action):
+    def __init__(self, text: str, click_action):
         super().__init__()
         self.text= text
         self.bgcolor= COLOR_SECOND
@@ -39,7 +39,7 @@ class Button(ft.ElevatedButton):
         )
 #CLASE View
 class ViewClass(ft.View):
-    def __init__(self, router, controls):
+    def __init__(self, router: str, controls):
         super().__init__()
         self.route = router
         self.controls = controls
@@ -49,7 +49,7 @@ class ViewClass(ft.View):
 
 #CLASE TextField
 class Field(ft.Container):
-    def __init__(self, label):
+    def __init__(self, label: str):
         super().__init__()
         self.content=ft.Column([
             ft.Text(value=label, color=COLOR_SECOND),
@@ -64,3 +64,11 @@ class Field(ft.Container):
             )
         ], spacing=5)
         self.padding=10
+
+class Text(ft.Text):
+    def __init__(self, value: str, size: int):
+        super().__init__()
+        self.value = value
+        self.size = size
+        self.color = COLOR_SECOND
+        self.bgcolor = COLOR_PRIMARY
