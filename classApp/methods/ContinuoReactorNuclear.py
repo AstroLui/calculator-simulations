@@ -1,14 +1,14 @@
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
-from Singleton import SingletonMeta
+from classApp.methods.Singleton import SingletonMeta
 
 class Nuclear(metaclass=SingletonMeta):
     # Atributo de la clase
     _Q_gen: float # Tasa de generacion de calor en vatios (W)
     _K: float # Coeficiente de enfriamiento en W/C
     _T_cool: float # Temperatura del sistema de enfriamiento en grados Celsius
-    _C: float # Capaciadad termica del ractor 
+    _C: float # Capaciadad termica del reactor 
     _T0: float # Temperatura inicial del reactro
     _tiempo = np.linspace(0, 200, 1000)  # Tiempo en minutos
 
@@ -40,8 +40,8 @@ class Nuclear(metaclass=SingletonMeta):
         plt.show()
 
     # Setter de los atributos
-    def set_atr(self, Q_get:float, K:float, T_cool:float, C:float, T0:float=150) -> None:
-        self._Q_gen = Q_get
+    def set_atr(self, Q_gen:float, K:float, T_cool:float, C:float, T0:float=150) -> None:
+        self._Q_gen = Q_gen
         self._K = K
         self._T_cool = T_cool
         self._C = C

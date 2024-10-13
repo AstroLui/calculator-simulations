@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
-from Singleton import SingletonMeta
+from classApp.methods.Singleton import SingletonMeta
 
 class Quimica(metaclass=SingletonMeta): 
     # Atributos de la clase
@@ -33,7 +33,7 @@ class Quimica(metaclass=SingletonMeta):
         plt.show()
 
     # Setter para los atributos k y A0
-    def set_atr(self, k, A0) -> None:
+    def set_atr(self, k:float, A0:float) -> None:
         self._k = k
         self._A0 = A0 
   

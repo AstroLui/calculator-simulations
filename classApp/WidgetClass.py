@@ -49,22 +49,27 @@ class ViewClass(ft.View):
 
 #CLASE TextField
 class Field(ft.Container):
-    def __init__(self, label: str):
+    def __init__(self, label: str, width: int=200) -> None:
         super().__init__()
+        self._TextField = ft.TextField(
+            bgcolor=COLOR_PRIMARY, 
+            cursor_color=COLOR_SECOND, 
+            color=COLOR_SECOND, 
+            border_color=COLOR_SECOND,
+            text_align= ALIGN_VERT,
+            text_size=config['input']['text-size'],
+            height=config['input']['height'],
+            value=0,
+            width = width
+        )
         self.content=ft.Column([
             ft.Text(value=label, color=COLOR_SECOND),
-            ft.TextField(
-                bgcolor=COLOR_PRIMARY, 
-                cursor_color=COLOR_SECOND, 
-                color=COLOR_SECOND, 
-                border_color=COLOR_SECOND,
-                text_align= ALIGN_VERT,
-                text_size=config['input']['text-size'],
-                height=config['input']['height'],
-                width=config['input']['width']
-            )
+            self._TextField
         ], spacing=5)
         self.padding=10
+    
+    def getValue(self):
+        return self._TextField.value
 
 class Text(ft.Text):
     def __init__(self, value: str, size: int, weight: str):
