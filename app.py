@@ -1,6 +1,6 @@
 import flet as ft
 from flet import View
-from classApp.WidgetClass import Button, ViewClass
+from classApp.WidgetClass import Button, ViewClass, Field
 from flet import RouteChangeEvent, ViewPopEvent
 import yaml
 
@@ -34,7 +34,7 @@ def main(page: ft.Page):
         # Sample Router
         if page.route == '/sample':
             page.views.append(
-                ViewClass('/sample', [Button('Go to home', lambda _: page.go('/home'))])
+                ViewClass('/sample', [Button('Go to home', lambda _: page.go('/home')), Field('Sample Field')])
             )
 
         page.update()
