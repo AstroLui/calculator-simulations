@@ -9,12 +9,12 @@ from classApp.methods.Singleton import SingletonMeta
 
 class Peluqueria(metaclass=SingletonMeta):
 
-  semilla: float
-  num_peluqueros: float
+  semilla: int
+  num_peluqueros: int
   tiempo_corte_min: float
   tiempo_corte_max: float
   t_llegadas: float
-  tot_clientes: float
+  tot_clientes: int
   te: float #tiempo de espera total
   dt: float#duracion del servicio
   fin:float#minuto en que finaliza
