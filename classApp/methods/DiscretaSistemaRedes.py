@@ -29,88 +29,93 @@ Con esta simulación, la empresa podrá tomar decisiones informadas sobre la con
 import simpy
 import random
 
-# Parámetros de la simulación
-SEMILLA = 42  # Semilla para reproducibilidad
-CAPACIDAD_SERVIDOR = 1  # Capacidad del servidor (cuántos paquetes puede procesar simultáneamente)
-CAPACIDAD_COLA = 5  # Capacidad de la cola de espera
-TIEMPO_PROCESAMIENTO_MIN = 2  # Tiempo mínimo de procesamiento de un paquete (segundos)
-TIEMPO_PROCESAMIENTO_MAX = 5  # Tiempo máximo de procesamiento de un paquete (segundos)
-TIEMPO_LLEGADAS = 3  # Tiempo promedio entre la llegada de paquetes (segundos)
-TOTAL_PAQUETES = 50  # Número total de paquetes a simular
+class Redes():
+    def __init__(self, semilla:int=42, cap_servidor:int=1,cap_cola:int=5,t_pros_min:int=2,
+                 t_pros_max:int=5,t_llegadas:int=3,t_paquetes:int=50):
+        self.SEMILLA = semilla
+        self.CAPACIDAD_SERVIDOR = cap_servidor
+        self.CAPACIDAD_COLA = cap_cola
+        self.TIEMPO_PROCESAMIENTO_MIN = t_pros_min
+        self.TIEMPO_PROCESAMIENTO_MAX = t_pros_max
+        self.TIEMPO_LLEGADAS = t_llegadas
+        self.TOTAL_PAQUETES = t_paquetes
 
-# Variables para seguimiento de estadísticas
-paquetes_perdidos = 0
-tiempo_total_espera = 0
-paquetes_procesados = 0
+        self.paquetes_perdidos = 0
+        self.tiempo_total_espera = 0
+        self.paquetes_procesados = 0
 
 
-# Función para simular el proceso de un paquete
-def paquete(env, nombre, servidor):
-    global paquetes_perdidos, tiempo_total_espera, paquetes_procesados
+    # Función para simular el proceso de un paquete
+    def paquete(self, env, nombre, servidor):
+        llegada = env.now  # Momento de llegada del paquete al sistema
+        print(f'{nombre} llega al servidor en el segundo {llegada:.2f}')
 
-    llegada = env.now  # Momento de llegada del paquete al sistema
-    print(f'{nombre} llega al servidor en el segundo {llegada:.2f}')
+        with servidor.request() as req:
+            # Si el servidor y la cola están llenos, el paquete se pierde
+            if len(servidor.queue) >= self.CAPACIDAD_COLA:
+                self.paquetes_perdidos += 1
+                print(
+                    f'{nombre} se pierde debido a cola llena en el segundo {env.now:.2f}'
+                )
+                return
 
-    with servidor.request() as req:
-        # Si el servidor y la cola están llenos, el paquete se pierde
-        if len(servidor.queue) >= CAPACIDAD_COLA:
-            paquetes_perdidos += 1
+            # El paquete espera su turno en la cola si es necesario
+            yield req
+            espera = env.now - llegada
+            self.tiempo_total_espera += espera
             print(
-                f'{nombre} se pierde debido a cola llena en el segundo {env.now:.2f}'
+                f'{nombre} comienza a ser procesado después de esperar {espera:.2f} segundos en el segundo {env.now:.2f}'
             )
-            return
 
-        # El paquete espera su turno en la cola si es necesario
-        yield req
-        espera = env.now - llegada
-        tiempo_total_espera += espera
+            # Simula el tiempo de procesamiento del paquete
+            tiempo_procesamiento = random.randint(self.TIEMPO_PROCESAMIENTO_MIN,
+                                                self.TIEMPO_PROCESAMIENTO_MAX)
+            yield env.timeout(tiempo_procesamiento)
+            print(f'{nombre} termina de ser procesado en el segundo {env.now:.2f}')
+            self.paquetes_procesados += 1
+
+
+    # Función para la llegada de paquetes
+    def llegada_paquetes(self,env, servidor):
+        """Genera la llegada de paquetes al servidor."""
+        for i in range(self.TOTAL_PAQUETES):
+            yield env.timeout(random.expovariate(
+                1.0 / self.TIEMPO_LLEGADAS))  # Tiempo entre llegadas de paquetes
+            env.process(self.paquete(env, f'Paquete {i+1}', servidor))
+
+    def result(self):
+        # Configuración y ejecución de la simulación
+        print('--- Simulación de Red de Computadoras ---')
+        random.seed(self.SEMILLA)  # Establece la semilla para reproducir resultados
+        env = simpy.Environment()  # Crea el entorno de simulación
+        servidor = simpy.Resource(
+            env, self.CAPACIDAD_SERVIDOR)  # Crea el recurso del servidor con su capacidad
+        env.process(self.llegada_paquetes(
+            env, servidor))  # Inicia el proceso de llegada de paquetes
+        env.run()  # Ejecuta la simulación
+        print('--- Fin de la simulación ---')
+
+        # Salidas de la simulación
+        print("\nResultados de la simulación:")
+        print(f'Total de paquetes simulados: {self.TOTAL_PAQUETES}')
+        print(f'Paquetes procesados: {self.paquetes_procesados}')
+        print(f'Paquetes perdidos: {self.paquetes_perdidos}')
         print(
-            f'{nombre} comienza a ser procesado después de esperar {espera:.2f} segundos en el segundo {env.now:.2f}'
+            f'Tasa de pérdida de paquetes: {100 * self.paquetes_perdidos / self.TOTAL_PAQUETES:.2f}%'
         )
-
-        # Simula el tiempo de procesamiento del paquete
-        tiempo_procesamiento = random.randint(TIEMPO_PROCESAMIENTO_MIN,
-                                              TIEMPO_PROCESAMIENTO_MAX)
-        yield env.timeout(tiempo_procesamiento)
-        print(f'{nombre} termina de ser procesado en el segundo {env.now:.2f}')
-        paquetes_procesados += 1
-
-
-# Función para la llegada de paquetes
-def llegada_paquetes(env, servidor):
-    """Genera la llegada de paquetes al servidor."""
-    for i in range(TOTAL_PAQUETES):
-        yield env.timeout(random.expovariate(
-            1.0 / TIEMPO_LLEGADAS))  # Tiempo entre llegadas de paquetes
-        env.process(paquete(env, f'Paquete {i+1}', servidor))
-
-def main():
-    # Configuración y ejecución de la simulación
-    print('--- Simulación de Red de Computadoras ---')
-    random.seed(SEMILLA)  # Establece la semilla para reproducir resultados
-    env = simpy.Environment()  # Crea el entorno de simulación
-    servidor = simpy.Resource(
-        env, CAPACIDAD_SERVIDOR)  # Crea el recurso del servidor con su capacidad
-    env.process(llegada_paquetes(
-        env, servidor))  # Inicia el proceso de llegada de paquetes
-    env.run()  # Ejecuta la simulación
-    print('--- Fin de la simulación ---')
-
-    # Salidas de la simulación
-    print("\nResultados de la simulación:")
-    print(f'Total de paquetes simulados: {TOTAL_PAQUETES}')
-    print(f'Paquetes procesados: {paquetes_procesados}')
-    print(f'Paquetes perdidos: {paquetes_perdidos}')
-    print(
-        f'Tasa de pérdida de paquetes: {100 * paquetes_perdidos / TOTAL_PAQUETES:.2f}%'
-    )
-    print(
-        f'Tiempo promedio de espera de los paquetes: {tiempo_total_espera / paquetes_procesados if paquetes_procesados > 0 else 0:.2f} segundos'
-    )
-    print(
-        f'Utilización del servidor: {100 * (paquetes_procesados * (TIEMPO_PROCESAMIENTO_MIN + TIEMPO_PROCESAMIENTO_MAX) / 2) / env.now:.2f}%'
-    )
-
-
-if __name__ == '__main__':
-    main()
+        print(
+            f'Tiempo promedio de espera de los paquetes: {self.tiempo_total_espera / self.paquetes_procesados if self.paquetes_procesados > 0 else 0:.2f} segundos'
+        )
+        print(
+            f'Utilización del servidor: {100 * (self.paquetes_procesados * (self.TIEMPO_PROCESAMIENTO_MIN + self.TIEMPO_PROCESAMIENTO_MAX) / 2) / env.now:.2f}%'
+        )
+    
+    def set_atr(self,semilla:int, cap_servidor:int,cap_cola:int,t_pros_min:int,
+                 t_pros_max:int,t_llegadas:int,t_paquetes:int):
+        self.SEMILLA = semilla
+        self.CAPACIDAD_SERVIDOR = cap_servidor
+        self.CAPACIDAD_COLA = cap_cola
+        self.TIEMPO_PROCESAMIENTO_MIN = t_pros_min
+        self.TIEMPO_PROCESAMIENTO_MAX = t_pros_max
+        self.TIEMPO_LLEGADAS = t_llegadas
+        self.TOTAL_PAQUETES = t_paquetes
