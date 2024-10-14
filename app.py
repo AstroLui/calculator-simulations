@@ -1,6 +1,6 @@
 import flet as ft
 from flet import View
-from classApp.WidgetClass import Button, ViewClass, Field, Text, Alert, ButtonAlert
+from classApp.WidgetClass import Button, ViewClass, Field, Text, Alert, ButtonAlert, Modal
 from flet import RouteChangeEvent, ViewPopEvent
 from classApp.methods.ContinuoReaccionQuimica import Quimica
 from classApp.methods.ContinuoReactorNuclear import Nuclear
@@ -134,7 +134,17 @@ def main(page: ft.Page) -> None:
             # Funcion para button calcular
             def _(e) -> None:
                 PELUQUERIA.set_atr(int(field_1.getValue()), int(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()), int(field_6.getValue()))
-                PELUQUERIA.result()
+                lcp, tep, upi, log = PELUQUERIA.result()
+                result = f"""LPC: {lcp:.2f}
+                TEP: {tep:.2f}
+                UPI: {upi:.2f}
+                """
+                megaResult = [ft.Text(result, color=COLOR_SECOND)]
+                for i in log:
+                    megaResult.append(ft.Text(i, color=COLOR_SECOND))
+                newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
+                modal = Modal('Simulación de Peluqueria', newContent)
+                page.open(modal)
             
             page.views.append(
                 ViewClass('peluqueria', 
@@ -162,7 +172,13 @@ def main(page: ft.Page) -> None:
             # Funcion para button calcular
             def _(e) -> None:
                 RESTAURANTE2.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()))
-                RESTAURANTE2.result()
+                log = RESTAURANTE2.result()
+                megaResult = []
+                for i in log:
+                    megaResult.append(ft.Text(i, color=COLOR_SECOND))
+                newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
+                modal = Modal('Simulación de Restaurante 2', newContent)
+                page.open(modal)
             
             page.views.append(
                 ViewClass('restaurante2', 
@@ -191,7 +207,20 @@ def main(page: ft.Page) -> None:
             # Funcion para button calcular
             def _(e) -> None:
                 REDES.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()), int(field_7.getValue()))
-                REDES.result()
+                totalPaquetes, paquetesProcesados, paquetesPerdidos, tasaPerdida, tiempoPromedioEspera, servidor, log = REDES.result()
+                result = f"""Total de paquetes simulados: {totalPaquetes}
+                Paquetes procesados: {paquetesProcesados}
+                Paquetes perdidos: {paquetesPerdidos}
+                Tasa de pérdida de paquetes: {tasaPerdida:.2f}%
+                Tiempo promedio de espera de los paquetes: {tiempoPromedioEspera:.2f} segundos
+                Utilización del servidor: {servidor:.2f}%
+                """
+                megaResult = [ft.Text(result, color=COLOR_SECOND)]
+                for i in log:
+                    megaResult.append(ft.Text(i, color=COLOR_SECOND))
+                newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
+                modal = Modal('Simulación de Red de Computadoras', newContent)
+                page.open(modal)
             
             page.views.append(
                 ViewClass('redes', 
