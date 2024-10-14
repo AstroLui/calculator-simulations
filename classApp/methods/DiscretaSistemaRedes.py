@@ -43,18 +43,19 @@ class Redes():
         self.paquetes_perdidos = 0
         self.tiempo_total_espera = 0
         self.paquetes_procesados = 0
+        self.log = []
 
 
     # Función para simular el proceso de un paquete
     def paquete(self, env, nombre, servidor):
         llegada = env.now  # Momento de llegada del paquete al sistema
-        print(f'{nombre} llega al servidor en el segundo {llegada:.2f}')
+        self.log.append(f'{nombre} llega al servidor en el segundo {llegada:.2f}')
 
         with servidor.request() as req:
             # Si el servidor y la cola están llenos, el paquete se pierde
             if len(servidor.queue) >= self.CAPACIDAD_COLA:
                 self.paquetes_perdidos += 1
-                print(
+                self.log.append(
                     f'{nombre} se pierde debido a cola llena en el segundo {env.now:.2f}'
                 )
                 return
@@ -63,7 +64,7 @@ class Redes():
             yield req
             espera = env.now - llegada
             self.tiempo_total_espera += espera
-            print(
+            self.log.append(
                 f'{nombre} comienza a ser procesado después de esperar {espera:.2f} segundos en el segundo {env.now:.2f}'
             )
 
@@ -71,7 +72,7 @@ class Redes():
             tiempo_procesamiento = random.randint(self.TIEMPO_PROCESAMIENTO_MIN,
                                                 self.TIEMPO_PROCESAMIENTO_MAX)
             yield env.timeout(tiempo_procesamiento)
-            print(f'{nombre} termina de ser procesado en el segundo {env.now:.2f}')
+            self.log.append(f'{nombre} termina de ser procesado en el segundo {env.now:.2f}')
             self.paquetes_procesados += 1
 
 
@@ -85,30 +86,20 @@ class Redes():
 
     def result(self):
         # Configuración y ejecución de la simulación
-        print('--- Simulación de Red de Computadoras ---')
+        self.log = []
         random.seed(self.SEMILLA)  # Establece la semilla para reproducir resultados
         env = simpy.Environment()  # Crea el entorno de simulación
-        servidor = simpy.Resource(
-            env, self.CAPACIDAD_SERVIDOR)  # Crea el recurso del servidor con su capacidad
-        env.process(self.llegada_paquetes(
-            env, servidor))  # Inicia el proceso de llegada de paquetes
+        servidor = simpy.Resource(env, self.CAPACIDAD_SERVIDOR)  # Crea el recurso del servidor con su capacidad
+        env.process(self.llegada_paquetes(env, servidor))  # Inicia el proceso de llegada de paquetes
         env.run()  # Ejecuta la simulación
-        print('--- Fin de la simulación ---')
+
+        #Cálculos
+        tasaDePerdida = 100 * self.paquetes_perdidos / self.TOTAL_PAQUETES if self.TOTAL_PAQUETES > 0 else 0
+        tiempoPromedioEspera = self.tiempo_total_espera / self.paquetes_procesados if self.paquetes_procesados > 0 else 0
+        utilizacionServidor = 100 * (self.paquetes_procesados * (self.TIEMPO_PROCESAMIENTO_MIN + self.TIEMPO_PROCESAMIENTO_MAX) / 2) / env.now if env.now > 0 else 0
 
         # Salidas de la simulación
-        print("\nResultados de la simulación:")
-        print(f'Total de paquetes simulados: {self.TOTAL_PAQUETES}')
-        print(f'Paquetes procesados: {self.paquetes_procesados}')
-        print(f'Paquetes perdidos: {self.paquetes_perdidos}')
-        print(
-            f'Tasa de pérdida de paquetes: {100 * self.paquetes_perdidos / self.TOTAL_PAQUETES:.2f}%'
-        )
-        print(
-            f'Tiempo promedio de espera de los paquetes: {self.tiempo_total_espera / self.paquetes_procesados if self.paquetes_procesados > 0 else 0:.2f} segundos'
-        )
-        print(
-            f'Utilización del servidor: {100 * (self.paquetes_procesados * (self.TIEMPO_PROCESAMIENTO_MIN + self.TIEMPO_PROCESAMIENTO_MAX) / 2) / env.now:.2f}%'
-        )
+        return self.TOTAL_PAQUETES, self.paquetes_procesados, self.paquetes_perdidos, tasaDePerdida, tiempoPromedioEspera, utilizacionServidor, self.log
     
     def set_atr(self,semilla:int, cap_servidor:int,cap_cola:int,t_pros_min:int,
                  t_pros_max:int,t_llegadas:int,t_paquetes:int):
