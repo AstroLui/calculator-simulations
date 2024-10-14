@@ -40,26 +40,20 @@ def main(page: ft.Page) -> None:
                     ft.Column([Text("Welcome to", 20, "w150"), Text("Menu", 40, "w800")], 
                     spacing=0, horizontal_alignment=ALIGN_HOR),
                     ft.Row([
-                            # Button('Go to Router Sample', lambda _: page.go('/sample')),
                             Button('Reaccion Quimica', lambda _: page.go('/quimica')),
-                            Button('Reactor Nuclear', lambda _: page.go('/nuclear'))
+                            Button('Reactor Nuclear', lambda _: page.go('/nuclear')),
+                            Button('Peluqueria',lambda _: page.go('/peluqueria'))
                         ], 
                     spacing=10, alignment=ALIGN_VERT),
                     ft.Row([
-                        Button('Peluqueria',lambda _: page.go('/peluqueria')),
+                        
                         Button('Restaurante 2', lambda _: page.go('/restaurante2')),
+                        Button('Restaurante Auto-Servicio', lambda _: page.go('/drive_thru')),
                         Button('Redes', lambda _: page.go('/redes')),
-                        Button('Restaurante Auto-Servicio', lambda _: page.go('/drive_thru'))  # New button
                     ], 
                     spacing=10, alignment=ALIGN_VERT)
                 ])
         )
-        
-        # Sample Router
-        # if page.route == '/sample':
-        #     page.views.append(
-        #         ViewClass('/sample', [Text("Sample", 40, "w800"), Field('Sample Field'), Button('Go to menu', lambda _: page.go('/home'))])
-        #     )
 
         # Quimica
         if page.route == '/quimica':
@@ -233,7 +227,6 @@ def main(page: ft.Page) -> None:
             field_2 = Field('Semilla aleatoria', 250)
             field_3 = Field('Hora de apertura', 250)
             field_4 = Field('Hora de cierre', 250)
-            field_5 = Field('Factor de simulación', 250)
             field_6 = Field('Inicio de hora pico', 250)
             field_7 = Field('Fin de hora pico', 250)
             field_8 = Field('Rango de clientes en horas normales', 250)
@@ -245,7 +238,6 @@ def main(page: ft.Page) -> None:
                         random_seed=int(field_2.getValue()),
                         hour_open=int(field_3.getValue()),
                         hour_close=int(field_4.getValue()),
-                        sim_factor=float(field_5.getValue()),
                         peak_start=int(field_6.getValue()),
                         peak_end=int(field_7.getValue()),
                         customer_range_norm=[int(x) for x in field_8.getValue().split(',')],
