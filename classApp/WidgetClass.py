@@ -79,4 +79,10 @@ class Text(ft.Text):
         self.color = COLOR_SECOND
         self.bgcolor = COLOR_PRIMARY
         self.weight = weight
-    
+
+class Modal(ft.AlertDialog):
+    def __init__(self, title: str, content):
+        super().__init__()
+        self.title = ft.Text(title, color=COLOR_SECOND)
+        self.content = content
+        self.bgcolor = COLOR_PRIMARY
