@@ -80,6 +80,7 @@ def main(page: ft.Page) -> None:
         if page.route == '/nuclear':
             #VARIABLE PARA EL METODO
             NUCLEAR = Nuclear
+            NUCLEAR = Nuclear()
             #Variables de los fields
             field_1 = Field('Tasa de Generacion de calor (Q_gen)', 250)
             field_2 = Field('Coeficiente de enfriamiento (K)',210)
@@ -90,6 +91,7 @@ def main(page: ft.Page) -> None:
             def _(e) -> None: 
                 NUCLEAR.set_atr(float(field_1.getValue()), float(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()))
                 NUCLEAR.result()
+                NUCLEAR.resutl()
             
             page.views.append(
                 ViewClass('nuclear', 
