@@ -7,19 +7,17 @@ from classApp.methods.ContinuoReactorNuclear import Nuclear
 from classApp.methods.DiscretaPeluqueria import Peluqueria
 from classApp.methods.DiscretaRestaurante2 import Restaurante2
 from classApp.methods.DiscretaSistemaRedes import Redes
+from classApp.methods.DiscretaRestaurante import DriveThruSimulation  # Import the new class
 import yaml
 
 with open('config.yml', 'r') as file:
     config = yaml.safe_load(file)
 
 # VARIABLES GLOBALES
-    # ALINIAMIENTO
 ALIGN_VERT = ft.MainAxisAlignment.CENTER
 ALIGN_HOR = ft.CrossAxisAlignment.CENTER
-    # TAMAÑO DE LA VENTANA
 WIDTH = config['size']['width']
 HEIGHT = config['size']['height']
-    # COLORES DE LA APP
 COLOR_PRIMARY = config['colors']['primary']
 COLOR_SECOND = config['colors']['second']
 
@@ -41,9 +39,8 @@ def main(page: ft.Page) -> None:
                 [
                     ft.Column([Text("Welcome to", 20, "w150"), Text("Menu", 40, "w800")], 
                     spacing=0, horizontal_alignment=ALIGN_HOR),
-                    # Cada 3 se crea una nueva row
                     ft.Row([
-                            Button('Go to Router Sample', lambda _: page.go('/sample')),
+                            # Button('Go to Router Sample', lambda _: page.go('/sample')),
                             Button('Reaccion Quimica', lambda _: page.go('/quimica')),
                             Button('Reactor Nuclear', lambda _: page.go('/nuclear'))
                         ], 
@@ -51,26 +48,24 @@ def main(page: ft.Page) -> None:
                     ft.Row([
                         Button('Peluqueria',lambda _: page.go('/peluqueria')),
                         Button('Restaurante 2', lambda _: page.go('/restaurante2')),
-                        Button('Redes', lambda _: page.go('/redes'))
+                        Button('Redes', lambda _: page.go('/redes')),
+                        Button('Restaurante Auto-Servicio', lambda _: page.go('/drive_thru'))  # New button
                     ], 
                     spacing=10, alignment=ALIGN_VERT)
                 ])
         )
         
         # Sample Router
-        if page.route == '/sample':
-            page.views.append(
-                ViewClass('/sample', [Text("Sample", 40, "w800"), Field('Sample Field'), Button('Go to menu', lambda _: page.go('/home'))])
-            )
+        # if page.route == '/sample':
+        #     page.views.append(
+        #         ViewClass('/sample', [Text("Sample", 40, "w800"), Field('Sample Field'), Button('Go to menu', lambda _: page.go('/home'))])
+        #     )
 
         # Quimica
         if page.route == '/quimica':
-            #VARIABLES PARA LOS METODOS
             QUIMICA = Quimica()
-            #Variables de los Fields
             field_1 = Field("Constante de Velocidad de Reaccion (K)", 250)
             field_2 = Field("Concentracion inicial de A (A0)")
-            # Function para Button Calcular
             def _(e) -> None: 
                 try:
                     QUIMICA.set_atr(float(field_1.getValue()), float(field_2.getValue()))
@@ -92,15 +87,12 @@ def main(page: ft.Page) -> None:
 
         # Nuclear
         if page.route == '/nuclear':
-            #VARIABLE PARA EL METODO
             NUCLEAR = Nuclear()
-            #Variables de los fields
             field_1 = Field('Tasa de Generacion de calor (Q_gen)', 250)
             field_2 = Field('Coeficiente de enfriamiento (K)',210)
             field_3 = Field('Temperatura del sistema (T_cool)', 250)
             field_4 = Field('Capacidad termica del reactor (C)',210)
             field_5 = Field('Temperatura inicial del reactor (T0)', 210)
-            # Funcion para button calcular
             def _(e) -> None: 
                 try:
                     NUCLEAR.set_atr(float(field_1.getValue()), float(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()))
@@ -121,17 +113,16 @@ def main(page: ft.Page) -> None:
                         ], alignment=ALIGN_VERT, spacing=5)
                     ])
             )
+
+        # Peluqueria
         if page.route == '/peluqueria':
-            #VARIABLE PARA EL METODO
             PELUQUERIA = Peluqueria()
-            #Variables de los fields
             field_1 = Field('Semilla', 250)
             field_2 = Field('Numero de peluqueros', 250)
             field_3 = Field('Tiempo de corte minimo', 250)
             field_4 = Field('Tiempo de corte maximo', 250)
             field_5 = Field('Tiempo entre llegadas', 250)
             field_6 = Field('Total de clientes', 250)
-            # Funcion para button calcular
             def _(e) -> None:
                 PELUQUERIA.set_atr(int(field_1.getValue()), int(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()), int(field_6.getValue()))
                 lcp, tep, upi, log = PELUQUERIA.result()
@@ -159,17 +150,16 @@ def main(page: ft.Page) -> None:
                         ], alignment=ALIGN_VERT, spacing=5)
                     ])
             )
+
+        # Restaurante 2
         if page.route == '/restaurante2':
-            #VARIABLE PARA EL METODO
             RESTAURANTE2 = Restaurante2()
-            #Variables de los fields
             field_1 = Field('Semilla', 250)
             field_2 = Field('Numero de mesas', 250)
             field_3 = Field('Tiempo comer minimo', 250)
             field_4 = Field('Tiempo comer maximo', 250)
             field_5 = Field('Tiempo entre llegadas', 250)
             field_6 = Field('Total de clientes', 250)
-            # Funcion para button calcular
             def _(e) -> None:
                 RESTAURANTE2.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()))
                 log = RESTAURANTE2.result()
@@ -193,10 +183,10 @@ def main(page: ft.Page) -> None:
                         ], alignment=ALIGN_VERT, spacing=5)
                     ])
             )
+
+        # Redes
         if page.route == '/redes':
-            #VARIABLE PARA EL METODO
             REDES = Redes()
-            #Variables de los fields
             field_1 = Field('Semilla', 250)
             field_2 = Field('Capacidad del servidor', 250)
             field_3 = Field('Capacidad de la cola', 250)
@@ -204,7 +194,6 @@ def main(page: ft.Page) -> None:
             field_5 = Field('Tiempo de procesamiento maximo', 250)
             field_6 = Field('Tiempo entre llegadas', 250)
             field_7 = Field('Total de paquetes', 250)
-            # Funcion para button calcular
             def _(e) -> None:
                 REDES.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()), int(field_7.getValue()))
                 totalPaquetes, paquetesProcesados, paquetesPerdidos, tasaPerdida, tiempoPromedioEspera, servidor, log = REDES.result()
@@ -237,7 +226,50 @@ def main(page: ft.Page) -> None:
                     ])
             )
 
-
+        # Drive Thru
+        if page.route == '/drive_thru':
+            DRIVE_THRU = DriveThruSimulation()
+            field_1 = Field('Numero de counters', 250)
+            field_2 = Field('Semilla aleatoria', 250)
+            field_3 = Field('Hora de apertura', 250)
+            field_4 = Field('Hora de cierre', 250)
+            field_5 = Field('Factor de simulación', 250)
+            field_6 = Field('Inicio de hora pico', 250)
+            field_7 = Field('Fin de hora pico', 250)
+            field_8 = Field('Rango de clientes en horas normales', 250)
+            field_9 = Field('Rango de clientes en horas pico', 250)
+            def _(e) -> None:
+                try:
+                    DRIVE_THRU.__init__(
+                        num_counters=int(field_1.getValue()),
+                        random_seed=int(field_2.getValue()),
+                        hour_open=int(field_3.getValue()),
+                        hour_close=int(field_4.getValue()),
+                        sim_factor=float(field_5.getValue()),
+                        peak_start=int(field_6.getValue()),
+                        peak_end=int(field_7.getValue()),
+                        customer_range_norm=[int(x) for x in field_8.getValue().split(',')],
+                        customer_range_peak=[int(x) for x in field_9.getValue().split(',')]
+                    )
+                    DRIVE_THRU.run()
+                except:
+                    alert.openAlert(page)
+            
+            page.views.append(
+                ViewClass('drive_thru', 
+                    [
+                        Text('Restaurante Auto-Servicio', 35, "w800"), 
+                        ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([field_3, field_4], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([field_5, field_6], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([field_7, field_8], alignment=ALIGN_VERT, spacing=5),
+                        field_9,
+                        ft.Row([
+                            Button('Calcular', click_action=_),
+                            Button('Go to menu', lambda _: page.go('/home'))
+                        ], alignment=ALIGN_VERT, spacing=5)
+                    ])
+            )
 
         page.update()
     
