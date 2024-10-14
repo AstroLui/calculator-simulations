@@ -4,6 +4,7 @@ from classApp.WidgetClass import Button, ViewClass, Field, Text
 from flet import RouteChangeEvent, ViewPopEvent
 from classApp.methods.ContinuoReaccionQuimica import Quimica
 from classApp.methods.ContinuoReactorNuclear import Nuclear
+from classApp.methods.DiscretaPeluqueria import Peluqueria
 import yaml
 
 with open('config.yml', 'r') as file:
@@ -42,6 +43,10 @@ def main(page: ft.Page) -> None:
                             Button('Reaccion Quimica', lambda _: page.go('/quimica')),
                             Button('Reactor Nuclear', lambda _: page.go('/nuclear'))
                         ], 
+                    spacing=10, alignment=ALIGN_VERT),
+                    ft.Row([
+                        Button('Peluqueria',lambda _: page.go('/peluqueria'))
+                    ], 
                     spacing=10, alignment=ALIGN_VERT)
                 ])
         )
@@ -79,7 +84,6 @@ def main(page: ft.Page) -> None:
         # Nuclear
         if page.route == '/nuclear':
             #VARIABLE PARA EL METODO
-            NUCLEAR = Nuclear
             NUCLEAR = Nuclear()
             #Variables de los fields
             field_1 = Field('Tasa de Generacion de calor (Q_gen)', 250)
@@ -90,7 +94,6 @@ def main(page: ft.Page) -> None:
             # Funcion para button calcular
             def _(e) -> None: 
                 NUCLEAR.set_atr(float(field_1.getValue()), float(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()))
-                NUCLEAR.result()
                 NUCLEAR.resutl()
             
             page.views.append(
@@ -100,6 +103,34 @@ def main(page: ft.Page) -> None:
                         ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([field_3, field_4], alignment=ALIGN_VERT, spacing=5),
                         field_5,
+                        ft.Row([
+                            Button('Calcular', click_action=_),
+                            Button('Go to menu', lambda _: page.go('/home'))
+                        ], alignment=ALIGN_VERT, spacing=5)
+                    ])
+            )
+        if page.route == '/peluqueria':
+            #VARIABLE PARA EL METODO
+            PELUQUERIA = Peluqueria()
+            #Variables de los fields
+            field_1 = Field('Semilla', 250)
+            field_2 = Field('Numero de peluqueros', 250)
+            field_3 = Field('Tiempo de corte minimo', 250)
+            field_4 = Field('Tiempo de corte maximo', 250)
+            field_5 = Field('Tiempo entre llegadas', 250)
+            field_6 = Field('Total de clientes', 250)
+            # Funcion para button calcular
+            def _(e) -> None:
+                PELUQUERIA.set_atr(int(field_1.getValue()), int(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()), int(field_6.getValue()))
+                PELUQUERIA.result()
+            
+            page.views.append(
+                ViewClass('peluqueria', 
+                    [
+                        Text('Peluqueria', 35, "w800"), 
+                        ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([field_3, field_4], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([field_5, field_6], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([
                             Button('Calcular', click_action=_),
                             Button('Go to menu', lambda _: page.go('/home'))
