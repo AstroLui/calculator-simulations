@@ -1,6 +1,6 @@
 import flet as ft
 from flet import View
-from classApp.WidgetClass import Button, ViewClass, Field, Text
+from classApp.WidgetClass import Button, ViewClass, Field, Text, Alert, ButtonAlert
 from flet import RouteChangeEvent, ViewPopEvent
 from classApp.methods.ContinuoReaccionQuimica import Quimica
 from classApp.methods.ContinuoReactorNuclear import Nuclear
@@ -29,6 +29,8 @@ def main(page: ft.Page) -> None:
     page.window.width = WIDTH
     page.window.center()
     page.window.resizable = False
+
+    alert = Alert([ButtonAlert("Close", lambda _: page.close(alert))])
 
     def router_change(e: RouteChangeEvent) -> None:
         page.views.clear()
@@ -70,9 +72,12 @@ def main(page: ft.Page) -> None:
             field_2 = Field("Concentracion inicial de A (A0)")
             # Function para Button Calcular
             def _(e) -> None: 
-                QUIMICA.set_atr(float(field_1.getValue()), float(field_2.getValue()))
-                QUIMICA.result()
-            
+                try:
+                    QUIMICA.set_atr(float(field_1.getValue()), float(field_2.getValue()))
+                    QUIMICA.result()
+                except:
+                    alert.openAlert(page)
+
             page.views.append(
                 ViewClass('quimica', 
                     [
@@ -97,9 +102,12 @@ def main(page: ft.Page) -> None:
             field_5 = Field('Temperatura inicial del reactor (T0)', 210)
             # Funcion para button calcular
             def _(e) -> None: 
-                NUCLEAR.set_atr(float(field_1.getValue()), float(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()))
-                NUCLEAR.resutl()
-            
+                try:
+                    NUCLEAR.set_atr(float(field_1.getValue()), float(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()))
+                    NUCLEAR.resutl()
+                except:
+                    alert.openAlert(page)
+                
             page.views.append(
                 ViewClass('nuclear', 
                     [

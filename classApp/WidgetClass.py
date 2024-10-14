@@ -12,6 +12,7 @@ ALIGN_HOR = ft.CrossAxisAlignment.CENTER
     # COLORES DE LA APP
 COLOR_PRIMARY = config['colors']['primary']
 COLOR_SECOND = config['colors']['second']
+DANGER = config['colors']['danger']
     # OTROS
 STATE = ft.ControlState
 
@@ -86,3 +87,39 @@ class Modal(ft.AlertDialog):
         self.title = ft.Text(title, color=COLOR_SECOND)
         self.content = content
         self.bgcolor = COLOR_PRIMARY
+    
+class Alert(ft.AlertDialog):
+    def __init__(self, actions) -> None:
+        super().__init__()
+        self.modal = True
+        self.bgcolor = DANGER
+        self.title=ft.Text('Mensaje de Error', color=COLOR_PRIMARY)
+        self.actions= actions
+    
+    def openAlert(self, page: ft.Page) -> None:
+        self.content= ft.Text("Uno de los campo de texto, no acepta el caracteres diferentes, solo se permite (int o float)", color=COLOR_PRIMARY)
+        page.open(self)
+
+
+
+class ButtonAlert(ft.ElevatedButton):
+    def __init__(self, text: str, click_action) -> None:
+        super().__init__()
+        self.text = text
+        self.bgcolor = COLOR_PRIMARY
+        self.color = DANGER
+        self.on_click = click_action
+        self.style = ft.ButtonStyle(
+            color={
+                STATE.HOVERED: DANGER,
+                STATE.FOCUSED: DANGER,
+                STATE.DEFAULT: COLOR_PRIMARY
+            },
+            bgcolor={
+                STATE.HOVERED: COLOR_PRIMARY,
+                STATE.DEFAULT: DANGER,
+            },
+            side={
+                STATE.DEFAULT: ft.BorderSide(2,COLOR_PRIMARY),
+            }
+        )
