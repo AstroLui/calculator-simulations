@@ -5,6 +5,8 @@ from flet import RouteChangeEvent, ViewPopEvent
 from classApp.methods.ContinuoReaccionQuimica import Quimica
 from classApp.methods.ContinuoReactorNuclear import Nuclear
 from classApp.methods.DiscretaPeluqueria import Peluqueria
+from classApp.methods.DiscretaRestaurante2 import Restaurante2
+from classApp.methods.DiscretaSistemaRedes import Redes
 import yaml
 
 with open('config.yml', 'r') as file:
@@ -45,7 +47,9 @@ def main(page: ft.Page) -> None:
                         ], 
                     spacing=10, alignment=ALIGN_VERT),
                     ft.Row([
-                        Button('Peluqueria',lambda _: page.go('/peluqueria'))
+                        Button('Peluqueria',lambda _: page.go('/peluqueria')),
+                        Button('Restaurante 2', lambda _: page.go('/restaurante2')),
+                        Button('Redes', lambda _: page.go('/redes'))
                     ], 
                     spacing=10, alignment=ALIGN_VERT)
                 ])
@@ -131,6 +135,64 @@ def main(page: ft.Page) -> None:
                         ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([field_3, field_4], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([field_5, field_6], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([
+                            Button('Calcular', click_action=_),
+                            Button('Go to menu', lambda _: page.go('/home'))
+                        ], alignment=ALIGN_VERT, spacing=5)
+                    ])
+            )
+        if page.route == '/restaurante2':
+            #VARIABLE PARA EL METODO
+            RESTAURANTE2 = Restaurante2()
+            #Variables de los fields
+            field_1 = Field('Semilla', 250)
+            field_2 = Field('Numero de mesas', 250)
+            field_3 = Field('Tiempo comer minimo', 250)
+            field_4 = Field('Tiempo comer maximo', 250)
+            field_5 = Field('Tiempo entre llegadas', 250)
+            field_6 = Field('Total de clientes', 250)
+            # Funcion para button calcular
+            def _(e) -> None:
+                RESTAURANTE2.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()))
+                RESTAURANTE2.result()
+            
+            page.views.append(
+                ViewClass('restaurante2', 
+                    [
+                        Text('Restaurante 2', 35, "w800"), 
+                        ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([field_3, field_4], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([field_5, field_6], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([
+                            Button('Calcular', click_action=_),
+                            Button('Go to menu', lambda _: page.go('/home'))
+                        ], alignment=ALIGN_VERT, spacing=5)
+                    ])
+            )
+        if page.route == '/redes':
+            #VARIABLE PARA EL METODO
+            REDES = Redes()
+            #Variables de los fields
+            field_1 = Field('Semilla', 250)
+            field_2 = Field('Capacidad del servidor', 250)
+            field_3 = Field('Capacidad de la cola', 250)
+            field_4 = Field('Tiempo de procesamiento minimo', 250)
+            field_5 = Field('Tiempo de procesamiento maximo', 250)
+            field_6 = Field('Tiempo entre llegadas', 250)
+            field_7 = Field('Total de paquetes', 250)
+            # Funcion para button calcular
+            def _(e) -> None:
+                REDES.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()), int(field_7.getValue()))
+                REDES.result()
+            
+            page.views.append(
+                ViewClass('redes', 
+                    [
+                        Text('Redes', 35, "w800"), 
+                        ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([field_3, field_4], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([field_5, field_6], alignment=ALIGN_VERT, spacing=5),
+                        ft.Row([field_7], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([
                             Button('Calcular', click_action=_),
                             Button('Go to menu', lambda _: page.go('/home'))
