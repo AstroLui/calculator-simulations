@@ -49,7 +49,7 @@ def main(page: ft.Page) -> None:
                     ft.Row([
                         
                         Button('Restaurante 2', lambda _: page.go('/restaurante2')),
-                        Button('Restaurante Auto-Servicio', lambda _: page.go('/drive_thru')),
+                        Button('Restaurante Auto-Servicio', lambda _: page.go('/auto_servicio')),
                         Button('Redes', lambda _: page.go('/redes')),
                     ], 
                     spacing=10, alignment=ALIGN_VERT)
@@ -222,8 +222,8 @@ def main(page: ft.Page) -> None:
             )
 
         # Drive Thru
-        if page.route == '/drive_thru':
-            DRIVE_THRU = DriveThruSimulation()
+        if page.route == '/auto_servicio':
+            auto_servicio = DriveThruSimulation()
             field_1 = Field('Numero de counters', 250, value='3')
             field_2 = Field('Semilla', 250, value='42')
             field_3 = Field('Hora de apertura', 250, value='7')
@@ -237,7 +237,7 @@ def main(page: ft.Page) -> None:
             
             def _(e) -> None:
                 try:
-                    DRIVE_THRU.__init__(
+                    auto_servicio.__init__(
                         num_counters=int(field_1.getValue()),
                         random_seed=int(field_2.getValue()),
                         hour_open=int(field_3.getValue()),
@@ -248,7 +248,7 @@ def main(page: ft.Page) -> None:
                         customer_range_peak=[int(field_10.getValue()), int(field_11.getValue())]
                     )
                     # Capture the output of the simulation
-                    output = DRIVE_THRU.run_with_output_capture()
+                    output = auto_servicio.run_with_output_capture()
                     
                     # Display the output
                     megaResult = [ft.Text(output, color=COLOR_SECOND)]
@@ -262,7 +262,7 @@ def main(page: ft.Page) -> None:
                     alert.openAlert(page, error_message)  # Display the error message in the alert
 
             page.views.append(
-                ViewClass('drive_thru', 
+                ViewClass('auto_servicio', 
                     [
                         Text('Restaurante Auto-Servicio', 35, "w800"), 
                         ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5),
