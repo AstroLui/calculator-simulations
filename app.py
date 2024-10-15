@@ -41,14 +41,14 @@ def main(page: ft.Page) -> None:
                     ft.Column([Text("Bienvenido a calculadora simulaciones", 20, "w150"), Text("Menú", 40, "w800")], 
                     spacing=0, horizontal_alignment=ALIGN_HOR),
                     ft.Row([
-                            Button('Reaccion Quimica', lambda _: page.go('/quimica')),
+                            Button('Reaccion Química', lambda _: page.go('/quimica')),
                             Button('Reactor Nuclear', lambda _: page.go('/nuclear')),
-                            Button('Peluqueria',lambda _: page.go('/peluqueria'))
+                            Button('Peluquería',lambda _: page.go('/peluqueria'))
                         ], 
                     spacing=10, alignment=ALIGN_VERT),
                     ft.Row([
                         
-                        Button('Restaurante 2', lambda _: page.go('/restaurante2')),
+                        Button('Restaurante', lambda _: page.go('/restaurante2')),
                         Button('Restaurante Auto-Servicio', lambda _: page.go('/auto_servicio')),
                         Button('Redes', lambda _: page.go('/redes')),
                     ], 
@@ -59,8 +59,8 @@ def main(page: ft.Page) -> None:
         # Quimica
         if page.route == '/quimica':
             QUIMICA = Quimica()
-            field_1 = Field("Constante de Velocidad de Reaccion (K)", 250, value='0.1')
-            field_2 = Field("Concentracion inicial de A (A0)", 250, value='1')
+            field_1 = Field("Constante de Velocidad de Reacción (K)", 250, value='0.1')
+            field_2 = Field("Concentración inicial de A (A0)", 250, value='1')
             def _(e) -> None: 
                 try:
                     QUIMICA.set_atr(float(field_1.getValue()), float(field_2.getValue()))
@@ -71,7 +71,7 @@ def main(page: ft.Page) -> None:
             page.views.append(
                 ViewClass('quimica', 
                     [
-                        Text('Quimica', 35, "w800"),
+                        Text('Quimíca', 35, "w800"),
                         ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5), 
                         ft.Row([
                             Button('Calcular', click_action=_),
@@ -83,10 +83,10 @@ def main(page: ft.Page) -> None:
         # Nuclear
         if page.route == '/nuclear':
             NUCLEAR = Nuclear()
-            field_1 = Field('Tasa de Generacion de calor (Q_gen)', 250, value='5000')
+            field_1 = Field('Tasa de Generación de calor (Q_gen)', 250, value='5000')
             field_2 = Field('Coeficiente de enfriamiento (K)',210, value='0.1')
             field_3 = Field('Temperatura del sistema (T_cool)', 250, value='25')
-            field_4 = Field('Capacidad termica del reactor (C)',210, value='10000')
+            field_4 = Field('Capacidad térmica del reactor (C)',210, value='10000')
             field_5 = Field('Temperatura inicial del reactor (T0)', 210, value='150')
             def _(e) -> None: 
                 try:
@@ -114,8 +114,8 @@ def main(page: ft.Page) -> None:
             PELUQUERIA = Peluqueria()
             field_1 = Field('Semilla', 250, value='30')
             field_2 = Field('Numero de peluqueros', 250, value='1')
-            field_3 = Field('Tiempo de corte minimo', 250, value='15')
-            field_4 = Field('Tiempo de corte maximo', 250, value='30')
+            field_3 = Field('Tiempo de corte mínimo', 250, value='15')
+            field_4 = Field('Tiempo de corte máximo', 250, value='30')
             field_5 = Field('Tiempo entre llegadas', 250, value='20')
             field_6 = Field('Total de clientes', 250, value='5')
             def _(e) -> None:
@@ -135,7 +135,7 @@ def main(page: ft.Page) -> None:
             page.views.append(
                 ViewClass('peluqueria', 
                     [
-                        Text('Peluqueria', 35, "w800"), 
+                        Text('Peluquería', 35, "w800"), 
                         ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([field_3, field_4], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([field_5, field_6], alignment=ALIGN_VERT, spacing=5),
@@ -151,8 +151,8 @@ def main(page: ft.Page) -> None:
             RESTAURANTE2 = Restaurante2()
             field_1 = Field('Semilla', 250, value='42')
             field_2 = Field('Numero de mesas', 250, value='5')
-            field_3 = Field('Tiempo comer minimo', 250, value='20')
-            field_4 = Field('Tiempo comer maximo', 250, value='40')
+            field_3 = Field('Tiempo de comer mínimo', 250, value='20')
+            field_4 = Field('Tiempo de comer máximo', 250, value='40')
             field_5 = Field('Tiempo entre llegadas', 250, value='10')
             field_6 = Field('Total de clientes', 250, value='10')
             def _(e) -> None:
@@ -185,8 +185,8 @@ def main(page: ft.Page) -> None:
             field_1 = Field('Semilla', 250, value='42')
             field_2 = Field('Capacidad del servidor', 250, value='1')
             field_3 = Field('Capacidad de la cola', 250, value='5')
-            field_4 = Field('Tiempo de procesamiento minimo', 250, value='2')
-            field_5 = Field('Tiempo de procesamiento maximo', 250, value='5')
+            field_4 = Field('Tiempo de procesamiento mínimo', 250, value='2')
+            field_5 = Field('Tiempo de procesamiento máximo', 250, value='5')
             field_6 = Field('Tiempo entre llegadas', 250, value='3')
             field_7 = Field('Total de paquetes', 250, value='50')
             def _(e) -> None:
