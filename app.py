@@ -23,7 +23,7 @@ COLOR_PRIMARY = config['colors']['primary']
 COLOR_SECOND = config['colors']['second']
 
 def main(page: ft.Page) -> None:
-    page.title = "Calculator Simulations"
+    page.title = "Calculadora Simulaciones"
     page.window.height = HEIGHT
     page.window.width = WIDTH
     page.window.center()
@@ -38,7 +38,7 @@ def main(page: ft.Page) -> None:
         page.views.append(
             ViewClass('/', 
                 [
-                    ft.Column([Text("Welcome to", 20, "w150"), Text("Menu", 40, "w800")], 
+                    ft.Column([Text("Bienvenido a calculadora simulaciones", 20, "w150"), Text("Menú", 40, "w800")], 
                     spacing=0, horizontal_alignment=ALIGN_HOR),
                     ft.Row([
                             Button('Reaccion Quimica', lambda _: page.go('/quimica')),
@@ -75,7 +75,7 @@ def main(page: ft.Page) -> None:
                         ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5), 
                         ft.Row([
                             Button('Calcular', click_action=_),
-                            Button('Go to menu', lambda _: page.go('/home'))
+                            Button('Volver a menú', lambda _: page.go('/home'))
                         ], alignment=ALIGN_VERT, spacing=5)
                     ])
             )
@@ -104,7 +104,7 @@ def main(page: ft.Page) -> None:
                         field_5,
                         ft.Row([
                             Button('Calcular', click_action=_),
-                            Button('Go to menu', lambda _: page.go('/home'))
+                            Button('Volver a menú', lambda _: page.go('/home'))
                         ], alignment=ALIGN_VERT, spacing=5)
                     ])
             )
@@ -141,7 +141,7 @@ def main(page: ft.Page) -> None:
                         ft.Row([field_5, field_6], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([
                             Button('Calcular', click_action=_),
-                            Button('Go to menu', lambda _: page.go('/home'))
+                            Button('Volver a menú', lambda _: page.go('/home'))
                         ], alignment=ALIGN_VERT, spacing=5)
                     ])
             )
@@ -174,7 +174,7 @@ def main(page: ft.Page) -> None:
                         ft.Row([field_5, field_6], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([
                             Button('Calcular', click_action=_),
-                            Button('Go to menu', lambda _: page.go('/home'))
+                            Button('Volver a menú', lambda _: page.go('/home'))
                         ], alignment=ALIGN_VERT, spacing=5)
                     ])
             )
@@ -216,7 +216,7 @@ def main(page: ft.Page) -> None:
                         ft.Row([field_7], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([
                             Button('Calcular', click_action=_),
-                            Button('Go to menu', lambda _: page.go('/home'))
+                            Button('Volver a menú', lambda _: page.go('/home'))
                         ], alignment=ALIGN_VERT, spacing=5)
                     ])
             )
@@ -274,7 +274,7 @@ def main(page: ft.Page) -> None:
                         ft.Row([field_10, field_11], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([
                             Button('Calcular', click_action=_),
-                            Button('Go to menu', lambda _: page.go('/home'))
+                            Button('Volver a menú', lambda _: page.go('/home'))
                         ], alignment=ALIGN_VERT, spacing=5)
                     ])
             )
