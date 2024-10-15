@@ -9,6 +9,7 @@ from classApp.methods.DiscretaRestaurante2 import Restaurante2
 from classApp.methods.DiscretaSistemaRedes import Redes
 from classApp.methods.DiscretaRestaurante import DriveThruSimulation  # Import the new class
 import yaml
+import traceback
 
 with open('config.yml', 'r') as file:
     config = yaml.safe_load(file)
@@ -229,8 +230,10 @@ def main(page: ft.Page) -> None:
             field_4 = Field('Hora de cierre', 250)
             field_6 = Field('Inicio de hora pico', 250)
             field_7 = Field('Fin de hora pico', 250)
-            field_8 = Field('Rango de clientes en horas normales', 250)
-            field_9 = Field('Rango de clientes en horas pico', 250)
+            field_8 = Field('Cota inferior', 250)
+            field_9 = Field('Cota superior', 250)
+            field_10 = Field('Cota inferior', 250)
+            field_11 = Field('Cota superior', 250)
             def _(e) -> None:
                 try:
                     DRIVE_THRU.__init__(
@@ -240,12 +243,15 @@ def main(page: ft.Page) -> None:
                         hour_close=int(field_4.getValue()),
                         peak_start=int(field_6.getValue()),
                         peak_end=int(field_7.getValue()),
-                        customer_range_norm=[int(x) for x in field_8.getValue().split(',')],
-                        customer_range_peak=[int(x) for x in field_9.getValue().split(',')]
+                        customer_range_norm=[int(field_8.getValue()),int(field_9.getValue())],
+                        customer_range_peak=[int(field_10.getValue()),int(field_11.getValue())]
                     )
                     DRIVE_THRU.run()
-                except:
-                    alert.openAlert(page)
+                except Exception as ex:
+                    error_message = f"An error occurred: {str(ex)}\n{traceback.format_exc()}"
+                    print(error_message)  # Print the error message to the console
+                    alert.openAlert(page)  # Display the error message in the alert
+
             
             page.views.append(
                 ViewClass('drive_thru', 
@@ -253,9 +259,11 @@ def main(page: ft.Page) -> None:
                         Text('Restaurante Auto-Servicio', 35, "w800"), 
                         ft.Row([field_1, field_2], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([field_3, field_4], alignment=ALIGN_VERT, spacing=5),
-                        ft.Row([field_5, field_6], alignment=ALIGN_VERT, spacing=5),
-                        ft.Row([field_7, field_8], alignment=ALIGN_VERT, spacing=5),
-                        field_9,
+                        ft.Row([field_6, field_7], alignment=ALIGN_VERT, spacing=5),
+                        Text('Rango de clientes en horas normales', 12, "w500"),
+                        ft.Row([field_8, field_9], alignment=ALIGN_VERT, spacing=5),
+                        Text('Rango de clientes en horas pico', 12, "w500"),
+                        ft.Row([field_10, field_11], alignment=ALIGN_VERT, spacing=5),
                         ft.Row([
                             Button('Calcular', click_action=_),
                             Button('Go to menu', lambda _: page.go('/home'))
