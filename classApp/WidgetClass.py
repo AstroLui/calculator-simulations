@@ -97,7 +97,7 @@ class Alert(ft.AlertDialog):
         self.actions= actions
     
     def openAlert(self, page: ft.Page) -> None:
-        self.content= ft.Text("Uno de los campo de texto, no acepta el caracteres diferentes, solo se permite (int o float)", color=COLOR_PRIMARY)
+        self.content= ft.Text("Los campos sólo aceptan números (int o float)", color=COLOR_PRIMARY)
         page.open(self)
 
 
