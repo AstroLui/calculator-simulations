@@ -1,8 +1,11 @@
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
-from classApp.methods.Singleton import SingletonMeta
-
+try: 
+    from classApp.methods.Singleton import SingletonMeta
+except:
+    from Singleton import SingletonMeta
+    
 class Quimica(metaclass=SingletonMeta): 
     # Atributos de la clase
     _k: float  # Constante de Velocidad de la reaccion (1/min)
@@ -10,7 +13,7 @@ class Quimica(metaclass=SingletonMeta):
     _tiempo = np.linspace(0, 50, 1000) # Tiempo de simulacion (0 a 50 min, con 1000 puntos)
 
     # Para Instanciar la clase
-    def __init__(self, k: float=0.1, A0: float=0.1) -> None:
+    def __init__(self, k: float = 0.1, A0: float = 1.0) -> None:
         self._k = k
         self._A0 = A0
 
@@ -36,6 +39,12 @@ class Quimica(metaclass=SingletonMeta):
     def set_atr(self, k:float, A0:float) -> None:
         self._k = k
         self._A0 = A0 
+    
+    def getK(self) -> float:
+        return self._k
+
+    def getA0(self) -> float:
+        return self._A0
   
 if __name__ == '__main__':
     q1 = Quimica()

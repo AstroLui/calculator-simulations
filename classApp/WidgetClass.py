@@ -50,7 +50,7 @@ class ViewClass(ft.View):
 
 #CLASE TextField
 class Field(ft.Container):
-    def __init__(self, label: str, width: int=200) -> None:
+    def __init__(self, label: str, width: int=200, value=0) -> None:
         super().__init__()
         self._TextField = ft.TextField(
             bgcolor=COLOR_PRIMARY, 
@@ -60,7 +60,7 @@ class Field(ft.Container):
             text_align= ALIGN_VERT,
             text_size=config['input']['text-size'],
             height=config['input']['height'],
-            value=0,
+            value=value,
             width = width
         )
         self.content=ft.Column([
