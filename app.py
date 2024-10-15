@@ -59,8 +59,8 @@ def main(page: ft.Page) -> None:
         # Quimica
         if page.route == '/quimica':
             QUIMICA = Quimica()
-            field_1 = Field("Constante de Velocidad de Reaccion (K)", 250)
-            field_2 = Field("Concentracion inicial de A (A0)")
+            field_1 = Field("Constante de Velocidad de Reaccion (K)", 250, value='0.1')
+            field_2 = Field("Concentracion inicial de A (A0)", 250, value='1')
             def _(e) -> None: 
                 try:
                     QUIMICA.set_atr(float(field_1.getValue()), float(field_2.getValue()))
@@ -83,11 +83,11 @@ def main(page: ft.Page) -> None:
         # Nuclear
         if page.route == '/nuclear':
             NUCLEAR = Nuclear()
-            field_1 = Field('Tasa de Generacion de calor (Q_gen)', 250)
-            field_2 = Field('Coeficiente de enfriamiento (K)',210)
-            field_3 = Field('Temperatura del sistema (T_cool)', 250)
-            field_4 = Field('Capacidad termica del reactor (C)',210)
-            field_5 = Field('Temperatura inicial del reactor (T0)', 210)
+            field_1 = Field('Tasa de Generacion de calor (Q_gen)', 250, value='5000')
+            field_2 = Field('Coeficiente de enfriamiento (K)',210, value='0.1')
+            field_3 = Field('Temperatura del sistema (T_cool)', 250, value='25')
+            field_4 = Field('Capacidad termica del reactor (C)',210, value='10000')
+            field_5 = Field('Temperatura inicial del reactor (T0)', 210, value='150')
             def _(e) -> None: 
                 try:
                     NUCLEAR.set_atr(float(field_1.getValue()), float(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()))
@@ -112,12 +112,12 @@ def main(page: ft.Page) -> None:
         # Peluqueria
         if page.route == '/peluqueria':
             PELUQUERIA = Peluqueria()
-            field_1 = Field('Semilla', 250)
-            field_2 = Field('Numero de peluqueros', 250)
-            field_3 = Field('Tiempo de corte minimo', 250)
-            field_4 = Field('Tiempo de corte maximo', 250)
-            field_5 = Field('Tiempo entre llegadas', 250)
-            field_6 = Field('Total de clientes', 250)
+            field_1 = Field('Semilla', 250, value='30')
+            field_2 = Field('Numero de peluqueros', 250, value='1')
+            field_3 = Field('Tiempo de corte minimo', 250, value='15')
+            field_4 = Field('Tiempo de corte maximo', 250, value='30')
+            field_5 = Field('Tiempo entre llegadas', 250, value='20')
+            field_6 = Field('Total de clientes', 250, value='5')
             def _(e) -> None:
                 PELUQUERIA.set_atr(int(field_1.getValue()), int(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()), int(field_6.getValue()))
                 lcp, tep, upi, log = PELUQUERIA.result()
@@ -149,12 +149,12 @@ def main(page: ft.Page) -> None:
         # Restaurante 2
         if page.route == '/restaurante2':
             RESTAURANTE2 = Restaurante2()
-            field_1 = Field('Semilla', 250)
-            field_2 = Field('Numero de mesas', 250)
-            field_3 = Field('Tiempo comer minimo', 250)
-            field_4 = Field('Tiempo comer maximo', 250)
-            field_5 = Field('Tiempo entre llegadas', 250)
-            field_6 = Field('Total de clientes', 250)
+            field_1 = Field('Semilla', 250, value='42')
+            field_2 = Field('Numero de mesas', 250, value='5')
+            field_3 = Field('Tiempo comer minimo', 250, value='20')
+            field_4 = Field('Tiempo comer maximo', 250, value='40')
+            field_5 = Field('Tiempo entre llegadas', 250, value='10')
+            field_6 = Field('Total de clientes', 250, value='10')
             def _(e) -> None:
                 RESTAURANTE2.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()))
                 log = RESTAURANTE2.result()
@@ -182,13 +182,13 @@ def main(page: ft.Page) -> None:
         # Redes
         if page.route == '/redes':
             REDES = Redes()
-            field_1 = Field('Semilla', 250)
-            field_2 = Field('Capacidad del servidor', 250)
-            field_3 = Field('Capacidad de la cola', 250)
-            field_4 = Field('Tiempo de procesamiento minimo', 250)
-            field_5 = Field('Tiempo de procesamiento maximo', 250)
-            field_6 = Field('Tiempo entre llegadas', 250)
-            field_7 = Field('Total de paquetes', 250)
+            field_1 = Field('Semilla', 250, value='42')
+            field_2 = Field('Capacidad del servidor', 250, value='1')
+            field_3 = Field('Capacidad de la cola', 250, value='5')
+            field_4 = Field('Tiempo de procesamiento minimo', 250, value='2')
+            field_5 = Field('Tiempo de procesamiento maximo', 250, value='5')
+            field_6 = Field('Tiempo entre llegadas', 250, value='3')
+            field_7 = Field('Total de paquetes', 250, value='50')
             def _(e) -> None:
                 REDES.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()), int(field_7.getValue()))
                 totalPaquetes, paquetesProcesados, paquetesPerdidos, tasaPerdida, tiempoPromedioEspera, servidor, log = REDES.result()
