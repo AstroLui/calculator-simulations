@@ -224,16 +224,16 @@ def main(page: ft.Page) -> None:
         # Drive Thru
         if page.route == '/drive_thru':
             DRIVE_THRU = DriveThruSimulation()
-            field_1 = Field('Numero de counters', 250)
-            field_2 = Field('Semilla aleatoria', 250)
-            field_3 = Field('Hora de apertura', 250)
-            field_4 = Field('Hora de cierre', 250)
-            field_6 = Field('Inicio de hora pico', 250)
-            field_7 = Field('Fin de hora pico', 250)
-            field_8 = Field('Cota inferior', 250)
-            field_9 = Field('Cota superior', 250)
-            field_10 = Field('Cota inferior', 250)
-            field_11 = Field('Cota superior', 250)
+            field_1 = Field('Numero de counters', 250, value='3')
+            field_2 = Field('Semilla aleatoria', 250, value='42')
+            field_3 = Field('Hora de apertura', 250, value='7')
+            field_4 = Field('Hora de cierre', 250, value='23')
+            field_6 = Field('Inicio de hora pico', 250, value='11')
+            field_7 = Field('Fin de hora pico', 250, value='13')
+            field_8 = Field('Cota inferior', 250, value='5')
+            field_9 = Field('Cota superior', 250, value='10')
+            field_10 = Field('Cota inferior', 250, value='1')
+            field_11 = Field('Cota superior', 250, value='5')
             
             def _(e) -> None:
                 try:
