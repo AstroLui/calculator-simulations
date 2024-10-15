@@ -34,7 +34,7 @@ class DriveThruSimulation:
         os.system(['clear', 'cls'][os.name == 'nt'])
 
     def toc(self, raw):
-        return '%02d:%02d' % (raw / 60, raw % 60)
+        return '%02d:%02d' % (raw // 60, raw % 60)
     
     def run_with_output_capture(self):
         # Redirect stdout to capture print statements
@@ -56,7 +56,7 @@ class DriveThruSimulation:
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>""")
 
         env = simpy.Environment(initial_time=self.start)
-        print("Environment created at %d!" % env.now)
+        print("Environment created at %s!" % self.toc(env.now))
 
         if self.num_counters == 2:
             env.process(self.setup2(env, self.customer_range_norm))
@@ -80,9 +80,9 @@ class DriveThruSimulation:
         print("[i] Service per minute: %f" % service_per_minute)
 
     def setup2(self, env, cr):
-        wl = self.WaitingLane(env)
-        ce12 = self.CounterFirstSecond(env)
-        ce3 = self.CounterThird(env)
+        wl = self.WaitingLane(env, self)
+        ce12 = self.CounterFirstSecond(env, self)
+        ce3 = self.CounterThird(env, self)
         i = 0
 
         while True:
@@ -91,10 +91,10 @@ class DriveThruSimulation:
             env.process(self.customer2A(env, "Cust %d" % i, wl, ce12, ce3))
 
     def setup3(self, env, cr):
-        wl = self.WaitingLane(env)
-        ce1 = self.CounterFirst(env)
-        ce2 = self.CounterSecond(env)
-        ce3 = self.CounterThird(env)
+        wl = self.WaitingLane(env, self)
+        ce1 = self.CounterFirst(env, self)
+        ce2 = self.CounterSecond(env, self)
+        ce3 = self.CounterThird(env, self)
         i = 0
 
         while True:
@@ -103,51 +103,56 @@ class DriveThruSimulation:
             env.process(self.customer3A(env, "Cust %d" % i, wl, ce1, ce2, ce3))
 
     class WaitingLane:
-        def __init__(self, env):
+        def __init__(self, env, simulation):
             self.env = env
+            self.simulation = simulation
             self.lane = simpy.Resource(env, 3)
 
         def serve(self, cust):
             yield self.env.timeout(0)
-            print("[w] (%s) %s entered the area" % (self.env.now, cust))
+            print("[w] (%s) %s entered the area" % (self.simulation.toc(self.env.now), cust))
 
     class CounterFirst:
-        def __init__(self, env):
+        def __init__(self, env, simulation):
             self.env = env
+            self.simulation = simulation
             self.employee = simpy.Resource(env, 1)
 
         def serve(self, cust):
             yield self.env.timeout(random.randint(1, 3))
-            print("[?] (%s) %s ordered the menu" % (self.env.now, cust))
+            print("[?] (%s) %s ordered the menu" % (self.simulation.toc(self.env.now), cust))
 
     class CounterSecond:
-        def __init__(self, env):
+        def __init__(self, env, simulation):
             self.env = env
+            self.simulation = simulation
             self.employee = simpy.Resource(env, 1)
 
         def serve(self, cust):
             yield self.env.timeout(random.randint(1, 2))
-            print("[$] (%s) %s paid the order" % (self.env.now, cust))
+            print("[$] (%s) %s paid the order" % (self.simulation.toc(self.env.now), cust))
 
     class CounterFirstSecond:
-        def __init__(self, env):
+        def __init__(self, env, simulation):
             self.env = env
+            self.simulation = simulation
             self.employee = simpy.Resource(env, 1)
 
         def serve(self, cust):
             yield self.env.timeout(random.randint(1, 3))
-            print("[?] (%s) %s ordered the menu" % (self.env.now, cust))
+            print("[?] (%s) %s ordered the menu" % (self.simulation.toc(self.env.now), cust))
             yield self.env.timeout(random.randint(1, 2))
-            print("[$] (%s) %s paid the order" % (self.env.now, cust))
+            print("[$] (%s) %s paid the order" % (self.simulation.toc(self.env.now), cust))
 
     class CounterThird:
-        def __init__(self, env):
+        def __init__(self, env, simulation):
             self.env = env
+            self.simulation = simulation
             self.employee = simpy.Resource(env, 1)
 
         def serve(self, cust):
             yield self.env.timeout(random.randint(2, 4))
-            print("[#] (%s) %s took the order" % (self.env.now, cust))
+            print("[#] (%s) %s took the order" % (self.simulation.toc(self.env.now), cust))
 
     def customer2A(self, env, name, wl, ce12, ce3):
         with wl.lane.request() as request:
