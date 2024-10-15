@@ -31,6 +31,19 @@ def main(page: ft.Page) -> None:
 
     alert = Alert([ButtonAlert("Close", lambda _: page.close(alert))])
 
+    def createTXT(content, title = None):
+        with open('output.txt', 'a') as f:
+            if title:
+                f.write(f'\n------------------------------------------{title}------------------------------------------')
+            if isinstance(content, list):
+                f.write('\n')
+                for item in content:
+                    f.write(f'{item}\n')
+            else:
+                f.write('\n')
+                f.write(content)
+        
+
     def router_change(e: RouteChangeEvent) -> None:
         page.views.clear()
 
@@ -125,9 +138,11 @@ def main(page: ft.Page) -> None:
                 TEP: {tep:.2f}
                 UPI: {upi:.2f}
                 """
+                createTXT(result, 'SIMULACIÓN PELUQUERÍA')
                 megaResult = [ft.Text(result, color=COLOR_SECOND)]
                 for i in log:
                     megaResult.append(ft.Text(i, color=COLOR_SECOND))
+                createTXT(log)
                 newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
                 modal = Modal('Simulación de Peluqueria', newContent)
                 page.open(modal)
@@ -161,6 +176,7 @@ def main(page: ft.Page) -> None:
                 megaResult = []
                 for i in log:
                     megaResult.append(ft.Text(i, color=COLOR_SECOND))
+                createTXT(log, 'SIMULACIÓN RESTAURANTE 2')
                 newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
                 modal = Modal('Simulación de Restaurante 2', newContent)
                 page.open(modal)
@@ -202,8 +218,11 @@ def main(page: ft.Page) -> None:
                 megaResult = [ft.Text(result, color=COLOR_SECOND)]
                 for i in log:
                     megaResult.append(ft.Text(i, color=COLOR_SECOND))
+                createTXT(log, 'SIMULACION REDES')
                 newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
                 modal = Modal('Simulación de Red de Computadoras', newContent)
+                createTXT(result)
+
                 page.open(modal)
             
             page.views.append(
@@ -249,6 +268,7 @@ def main(page: ft.Page) -> None:
                     )
                     # Capture the output of the simulation
                     output = auto_servicio.run_with_output_capture()
+                    createTXT(output, 'SIMULACIÓN RESTAURANTE AUTO-SERVICIO')
                     
                     # Display the output
                     megaResult = [ft.Text(output, color=COLOR_SECOND)]
