@@ -1,6 +1,8 @@
 import os
 import random
 import simpy
+import io
+import sys
 
 class DriveThruSimulation:
     def __init__(self, num_counters=3, random_seed=42, hour_open=7, hour_close=23, sim_factor=1/60, peak_start=11, peak_end=13, customer_range_norm=[5, 10], customer_range_peak=[1, 5]):
@@ -33,6 +35,17 @@ class DriveThruSimulation:
 
     def toc(self, raw):
         return '%02d:%02d' % (raw / 60, raw % 60)
+    
+    def run_with_output_capture(self):
+        # Redirect stdout to capture print statements
+        old_stdout = sys.stdout
+        sys.stdout = buffer = io.StringIO()
+        try:
+            self.run()
+        finally:
+            # Restore stdout
+            sys.stdout = old_stdout
+        return buffer.getvalue()
 
     def run(self):
         self.clear()

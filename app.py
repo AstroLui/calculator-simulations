@@ -234,6 +234,7 @@ def main(page: ft.Page) -> None:
             field_9 = Field('Cota superior', 250)
             field_10 = Field('Cota inferior', 250)
             field_11 = Field('Cota superior', 250)
+            
             def _(e) -> None:
                 try:
                     DRIVE_THRU.__init__(
@@ -243,16 +244,23 @@ def main(page: ft.Page) -> None:
                         hour_close=int(field_4.getValue()),
                         peak_start=int(field_6.getValue()),
                         peak_end=int(field_7.getValue()),
-                        customer_range_norm=[int(field_8.getValue()),int(field_9.getValue())],
-                        customer_range_peak=[int(field_10.getValue()),int(field_11.getValue())]
+                        customer_range_norm=[int(field_8.getValue()), int(field_9.getValue())],
+                        customer_range_peak=[int(field_10.getValue()), int(field_11.getValue())]
                     )
-                    DRIVE_THRU.run()
+                    # Capture the output of the simulation
+                    output = DRIVE_THRU.run_with_output_capture()
+                    
+                    # Display the output
+                    megaResult = [ft.Text(output, color=COLOR_SECOND)]
+                    newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
+                    modal = Modal('Simulación de Restaurante Auto-Servicio', newContent)
+                    page.open(modal)
+                
                 except Exception as ex:
                     error_message = f"An error occurred: {str(ex)}\n{traceback.format_exc()}"
                     print(error_message)  # Print the error message to the console
-                    alert.openAlert(page)  # Display the error message in the alert
+                    alert.openAlert(page, error_message)  # Display the error message in the alert
 
-            
             page.views.append(
                 ViewClass('drive_thru', 
                     [
