@@ -45,6 +45,11 @@ class Redes():
         self.paquetes_procesados = 0
         self.log = []
 
+    def reset(self):
+        self.paquetes_perdidos = 0
+        self.tiempo_total_espera = 0
+        self.paquetes_procesados = 0
+        self.log = []
 
     # Función para simular el proceso de un paquete
     def paquete(self, env, nombre, servidor):
@@ -86,7 +91,7 @@ class Redes():
 
     def result(self):
         # Configuración y ejecución de la simulación
-        self.log = []
+        self.reset()
         random.seed(self.SEMILLA)  # Establece la semilla para reproducir resultados
         env = simpy.Environment()  # Crea el entorno de simulación
         servidor = simpy.Resource(env, self.CAPACIDAD_SERVIDOR)  # Crea el recurso del servidor con su capacidad
