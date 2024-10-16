@@ -144,21 +144,29 @@ def main(page: ft.Page) -> None:
             field_5 = Field('Tiempo entre llegadas', 250, value='20')
             field_6 = Field('Total de clientes', 250, value='5')
             def _(e) -> None:
-                PELUQUERIA.set_atr(int(field_1.getValue()), int(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()), int(field_6.getValue()))
-                lcp, tep, upi, log = PELUQUERIA.result()
-                result = f"""LPC: {lcp:.2f}
-                TEP: {tep:.2f}
-                UPI: {upi:.2f}
-                """
-                createTXT(result, 'SIMULACIÓN PELUQUERÍA')
-                megaResult = [ft.Text(result, color=COLOR_SECOND)]
-                for i in log:
-                    megaResult.append(ft.Text(i, color=COLOR_SECOND))
-                createTXT(log)
-                newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
-                modal = Modal('Simulación de Peluqueria', newContent)
-                page.open(modal)
-            
+                try:
+                    PELUQUERIA.set_atr(int(field_1.getValue()), int(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()), int(field_6.getValue()))
+                    lcp, tep, upi, log = PELUQUERIA.result()
+                    result = f"""LPC: {lcp:.2f}
+                    TEP: {tep:.2f}
+                    UPI: {upi:.2f}
+                    """
+                    createTXT(result, 'SIMULACIÓN PELUQUERÍA')
+                    megaResult = [ft.Text(result, color=COLOR_SECOND)]
+                    for i in log:
+                        megaResult.append(ft.Text(i, color=COLOR_SECOND))
+                    createTXT(log)
+                    newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
+                    modal = Modal('Simulación de Peluqueria', newContent)
+                    page.open(modal)
+                except ValueError:
+                    alert.openAlert(page, "Error: Por favor, ingrese valores numéricos válidos.")
+                except TypeError:
+                    alert.openAlert(page, "Error: Tipo de dato incorrecto.")
+                except AttributeError:
+                    alert.openAlert(page, "Error: Atributo no encontrado.")
+                except Exception as ex:
+                    alert.openAlert(page, f"Error inesperado: {str(ex)}")
             page.views.append(
                 ViewClass('peluqueria', 
                     [
@@ -183,16 +191,24 @@ def main(page: ft.Page) -> None:
             field_5 = Field('Tiempo entre llegadas', 250, value='10')
             field_6 = Field('Total de clientes', 250, value='10')
             def _(e) -> None:
-                RESTAURANTE2.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()))
-                log = RESTAURANTE2.result()
-                megaResult = []
-                for i in log:
-                    megaResult.append(ft.Text(i, color=COLOR_SECOND))
-                createTXT(log, 'SIMULACIÓN RESTAURANTE 2')
-                newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
-                modal = Modal('Simulación de Restaurante 2', newContent)
-                page.open(modal)
-            
+                try:
+                    RESTAURANTE2.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()))
+                    log = RESTAURANTE2.result()
+                    megaResult = []
+                    for i in log:
+                        megaResult.append(ft.Text(i, color=COLOR_SECOND))
+                    createTXT(log, 'SIMULACIÓN RESTAURANTE 2')
+                    newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
+                    modal = Modal('Simulación de Restaurante 2', newContent)
+                    page.open(modal)
+                except ValueError:
+                    alert.openAlert(page, "Error: Por favor, ingrese valores numéricos válidos.")
+                except TypeError:
+                    alert.openAlert(page, "Error: Tipo de dato incorrecto.")
+                except AttributeError:
+                    alert.openAlert(page, "Error: Atributo no encontrado.")
+                except Exception as ex:
+                    alert.openAlert(page, f"Error inesperado: {str(ex)}")
             page.views.append(
                 ViewClass('restaurante2', 
                     [
@@ -218,22 +234,31 @@ def main(page: ft.Page) -> None:
             field_6 = Field('Tiempo entre llegadas', 250, value='3')
             field_7 = Field('Total de paquetes', 250, value='50')
             def _(e) -> None:
-                REDES.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()), int(field_7.getValue()))
-                totalPaquetes, paquetesProcesados, paquetesPerdidos, tasaPerdida, tiempoPromedioEspera, servidor, log = REDES.result()
-                result = f"""Total de paquetes simulados: {totalPaquetes}
-                Paquetes procesados: {paquetesProcesados}
-                Paquetes perdidos: {paquetesPerdidos}
-                Tasa de pérdida de paquetes: {tasaPerdida:.2f}%
-                Tiempo promedio de espera de los paquetes: {tiempoPromedioEspera:.2f} segundos
-                Utilización del servidor: {servidor:.2f}%
-                """
-                megaResult = [ft.Text(result, color=COLOR_SECOND)]
-                for i in log:
-                    megaResult.append(ft.Text(i, color=COLOR_SECOND))
-                createTXT(log, 'SIMULACION REDES')
-                newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
-                modal = Modal('Simulación de Red de Computadoras', newContent)
-                createTXT(result)
+                try:
+                    REDES.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()), int(field_7.getValue()))
+                    totalPaquetes, paquetesProcesados, paquetesPerdidos, tasaPerdida, tiempoPromedioEspera, servidor, log = REDES.result()
+                    result = f"""Total de paquetes simulados: {totalPaquetes}
+                    Paquetes procesados: {paquetesProcesados}
+                    Paquetes perdidos: {paquetesPerdidos}
+                    Tasa de pérdida de paquetes: {tasaPerdida:.2f}%
+                    Tiempo promedio de espera de los paquetes: {tiempoPromedioEspera:.2f} segundos
+                    Utilización del servidor: {servidor:.2f}%
+                    """
+                    megaResult = [ft.Text(result, color=COLOR_SECOND)]
+                    for i in log:
+                        megaResult.append(ft.Text(i, color=COLOR_SECOND))
+                    createTXT(log, 'SIMULACION REDES')
+                    newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
+                    modal = Modal('Simulación de Red de Computadoras', newContent)
+                    createTXT(result)
+                except ValueError:
+                    alert.openAlert(page, "Error: Por favor, ingrese valores numéricos válidos.")
+                except TypeError:
+                    alert.openAlert(page, "Error: Tipo de dato incorrecto.")
+                except AttributeError:
+                    alert.openAlert(page, "Error: Atributo no encontrado.")
+                except Exception as ex:
+                    alert.openAlert(page, f"Error inesperado: {str(ex)}")
 
                 page.open(modal)
             
