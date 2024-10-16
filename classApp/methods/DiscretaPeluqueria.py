@@ -34,6 +34,15 @@ class Peluqueria(metaclass=SingletonMeta):
     random.seed(self.semilla)
     self.env = simpy.Environment()
     self.personal = simpy.Resource(self.env, self.num_peluqueros)
+
+  def reset(self) -> None:
+      self.te = 0 
+      self.dt = 0 
+      self.fin = 0
+      self.log = []
+      random.seed(self.semilla)
+      self.env = simpy.Environment()
+      self.personal = simpy.Resource(self.env, self.num_peluqueros)
   #procedimientos
   def  cortar(self, cliente):
     R = random.random()
@@ -69,7 +78,7 @@ class Peluqueria(metaclass=SingletonMeta):
       self.env.process(self.cliente('cliente %d' % i))
 
   def result(self):
-          self.log = []
+          self.reset()
           self.env.process(self.principal())
           self.env.run()
           lpc = self.te / self.fin
