@@ -9,6 +9,7 @@ from classApp.methods.DiscretaRestaurante2 import Restaurante2
 from classApp.methods.DiscretaSistemaRedes import Redes
 from classApp.methods.DiscretaRestaurante import DriveThruSimulation  # Import the new class
 import yaml
+from classApp.WidgetClass import createTXT
 import traceback
 
 with open('config.yml', 'r') as file:
@@ -29,20 +30,17 @@ def main(page: ft.Page) -> None:
     page.window.center()
     page.window.resizable = False
 
-    alert = Alert([ButtonAlert("Close", lambda _: page.close(alert))])
+    page.theme = ft.Theme(
+        scrollbar_theme=ft.ScrollbarTheme(
+            track_color={ft.ControlState.DEFAULT: ft.colors.TRANSPARENT},
+            track_visibility=False,
+            thumb_visibility=True,
+            thumb_color={ft.ControlState.DEFAULT: COLOR_SECOND}
+        )
+    )
 
-    def createTXT(content, title = None):
-        with open('output.txt', 'a') as f:
-            if title:
-                f.write(f'\n------------------------------------------{title}------------------------------------------')
-            if isinstance(content, list):
-                f.write('\n')
-                for item in content:
-                    f.write(f'{item}\n')
-            else:
-                f.write('\n')
-                f.write(content)
-        
+    alert = Alert([ButtonAlert("Close", lambda _: page.close(alert))])
+    modal = Modal([Button("Close", lambda _: page.close(modal))])
 
     def router_change(e: RouteChangeEvent) -> None:
         page.views.clear()
@@ -146,19 +144,13 @@ def main(page: ft.Page) -> None:
             def _(e) -> None:
                 try:
                     PELUQUERIA.set_atr(int(field_1.getValue()), int(field_2.getValue()), float(field_3.getValue()), float(field_4.getValue()), float(field_5.getValue()), int(field_6.getValue()))
-                    lcp, tep, upi, log = PELUQUERIA.result()
-                    result = f"""LPC: {lcp:.2f}
-                    TEP: {tep:.2f}
-                    UPI: {upi:.2f}
-                    """
-                    createTXT(result, 'SIMULACIÓN PELUQUERÍA')
-                    megaResult = [ft.Text(result, color=COLOR_SECOND)]
-                    for i in log:
-                        megaResult.append(ft.Text(i, color=COLOR_SECOND))
-                    createTXT(log)
-                    newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
-                    modal = Modal('Simulación de Peluqueria', newContent)
-                    page.open(modal)
+                    PELUQUERIA.result()
+                    createTXT(PELUQUERIA.getResultText(), 'SIMULACIÓN PELUQUERÍA')
+                    results = [ft.Text(PELUQUERIA.getResultText(), color=COLOR_SECOND)]
+                    for i in PELUQUERIA.getLog():
+                        results.append(ft.Text(i, color=COLOR_SECOND))
+                    createTXT(PELUQUERIA.getLog())
+                    modal.openModal(page=page,title='Simulación de Peluqueria', content=results)
                 except ValueError:
                     alert.openAlert(page, "Error: Por favor, ingrese valores numéricos válidos.")
                 except TypeError:
@@ -167,6 +159,7 @@ def main(page: ft.Page) -> None:
                     alert.openAlert(page, "Error: Atributo no encontrado.")
                 except Exception as ex:
                     alert.openAlert(page, f"Error inesperado: {str(ex)}")
+
             page.views.append(
                 ViewClass('peluqueria', 
                     [
@@ -193,14 +186,12 @@ def main(page: ft.Page) -> None:
             def _(e) -> None:
                 try:
                     RESTAURANTE2.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()))
-                    log = RESTAURANTE2.result()
-                    megaResult = []
-                    for i in log:
-                        megaResult.append(ft.Text(i, color=COLOR_SECOND))
-                    createTXT(log, 'SIMULACIÓN RESTAURANTE 2')
-                    newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
-                    modal = Modal('Simulación de Restaurante 2', newContent)
-                    page.open(modal)
+                    RESTAURANTE2.result()
+                    results = []
+                    for i in RESTAURANTE2.getLog():
+                        results.append(ft.Text(i, color=COLOR_SECOND))
+                    createTXT(RESTAURANTE2.getLog(), 'SIMULACIÓN RESTAURANTE 2')
+                    modal.openModal(page, 'Simulación de Restaurante 2', results)
                 except ValueError:
                     alert.openAlert(page, "Error: Por favor, ingrese valores numéricos válidos.")
                 except TypeError:
@@ -209,6 +200,7 @@ def main(page: ft.Page) -> None:
                     alert.openAlert(page, "Error: Atributo no encontrado.")
                 except Exception as ex:
                     alert.openAlert(page, f"Error inesperado: {str(ex)}")
+
             page.views.append(
                 ViewClass('restaurante2', 
                     [
@@ -236,21 +228,14 @@ def main(page: ft.Page) -> None:
             def _(e) -> None:
                 try:
                     REDES.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()), int(field_7.getValue()))
-                    totalPaquetes, paquetesProcesados, paquetesPerdidos, tasaPerdida, tiempoPromedioEspera, servidor, log = REDES.result()
-                    result = f"""Total de paquetes simulados: {totalPaquetes}
-                    Paquetes procesados: {paquetesProcesados}
-                    Paquetes perdidos: {paquetesPerdidos}
-                    Tasa de pérdida de paquetes: {tasaPerdida:.2f}%
-                    Tiempo promedio de espera de los paquetes: {tiempoPromedioEspera:.2f} segundos
-                    Utilización del servidor: {servidor:.2f}%
-                    """
-                    megaResult = [ft.Text(result, color=COLOR_SECOND)]
-                    for i in log:
-                        megaResult.append(ft.Text(i, color=COLOR_SECOND))
-                    createTXT(log, 'SIMULACION REDES')
-                    newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
-                    modal = Modal('Simulación de Red de Computadoras', newContent)
-                    createTXT(result)
+                    REDES.result()
+                    results = [ft.Text(REDES.getResultText(), color=COLOR_SECOND)]
+                    for i in REDES.getLog():
+                        results.append(ft.Text(i, color=COLOR_SECOND))
+                    createTXT(REDES.getLog(), 'SIMULACION REDES')
+                    modal.openModal(page,'Simulación de Red de Computadoras', results)
+                    createTXT(REDE.getResultText())
+
                 except ValueError:
                     alert.openAlert(page, "Error: Por favor, ingrese valores numéricos válidos.")
                 except TypeError:
@@ -260,7 +245,6 @@ def main(page: ft.Page) -> None:
                 except Exception as ex:
                     alert.openAlert(page, f"Error inesperado: {str(ex)}")
 
-                page.open(modal)
             
             page.views.append(
                 ViewClass('redes', 
@@ -308,11 +292,8 @@ def main(page: ft.Page) -> None:
                     createTXT(output, 'SIMULACIÓN RESTAURANTE AUTO-SERVICIO')
                     
                     # Display the output
-                    megaResult = [ft.Text(output, color=COLOR_SECOND)]
-                    newContent = ft.Column(megaResult, scroll=ft.ScrollMode.ALWAYS)
-                    modal = Modal('Simulación de Restaurante Auto-Servicio', newContent)
-                    page.open(modal)
-                
+                    results = [ft.Text(output, color=COLOR_SECOND)]
+                    modal.openModal(page,'Simulación de Restaurante Auto-Servicio', results)
                 except ValueError:
                     alert.openAlert(page, "Error: Por favor, ingrese valores numéricos válidos.")
                 except TypeError:

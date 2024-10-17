@@ -16,7 +16,7 @@ DANGER = config['colors']['danger']
     # OTROS
 STATE = ft.ControlState
 
-#CLASE BOTON
+# CLASE BOTON
 class Button(ft.ElevatedButton):
     def __init__(self, text: str, click_action):
         super().__init__()
@@ -38,7 +38,7 @@ class Button(ft.ElevatedButton):
                 STATE.HOVERED: ft.BorderSide(2, COLOR_SECOND),
             }
         )
-#CLASE View
+# CLASE View
 class ViewClass(ft.View):
     def __init__(self, router: str, controls):
         super().__init__()
@@ -48,7 +48,7 @@ class ViewClass(ft.View):
         self.vertical_alignment = ALIGN_VERT
         self.horizontal_alignment = ALIGN_HOR
 
-#CLASE TextField
+# CLASE TextField
 class Field(ft.Container):
     def __init__(self, label: str, width: int=200, value=0) -> None:
         super().__init__()
@@ -72,8 +72,9 @@ class Field(ft.Container):
     def getValue(self):
         return self._TextField.value
 
+# CLASE PARA TEXTO EN ESPECIFICOS como Titulos, Subtitulos, etc
 class Text(ft.Text):
-    def __init__(self, value: str, size: int, weight: str):
+    def __init__(self, value: str, size: int, weight: str) -> None:
         super().__init__()
         self.value = value
         self.size = size
@@ -81,13 +82,20 @@ class Text(ft.Text):
         self.bgcolor = COLOR_PRIMARY
         self.weight = weight
 
+# CLASE PARA EL MODAL
 class Modal(ft.AlertDialog):
-    def __init__(self, title: str, content):
+    def __init__(self, actions) -> None:
         super().__init__()
-        self.title = ft.Text(title, color=COLOR_SECOND)
-        self.content = content
+        self.content_padding = 20
         self.bgcolor = COLOR_PRIMARY
-    
+        self.actions = actions
+
+    def openModal(self, page: ft.Page, title: str, content:[]) -> None:
+        self.title = Text(title, 25, 800)
+        self.content = ft.Column(content, spacing=5, scroll=ft.ScrollMode.AUTO)
+        page.open(self)
+
+# CLASE PARA EL ALERT     
 class Alert(ft.AlertDialog):
     def __init__(self, actions) -> None:
         super().__init__()
@@ -101,7 +109,7 @@ class Alert(ft.AlertDialog):
         page.open(self)
 
 
-
+# BUTTON PARA EL ALERT
 class ButtonAlert(ft.ElevatedButton):
     def __init__(self, text: str, click_action) -> None:
         super().__init__()
@@ -123,3 +131,15 @@ class ButtonAlert(ft.ElevatedButton):
                 STATE.DEFAULT: ft.BorderSide(2,COLOR_PRIMARY),
             }
         )
+
+def createTXT(content, title = None) -> None:
+    with open('output.txt', 'a') as f:
+        if title:
+            f.write(f'\n------------------------------------------{title}------------------------------------------')
+        if isinstance(content, list):
+            f.write('\n')
+            for item in content:
+                f.write(f'{item}\n')
+        else:
+            f.write('\n')
+            f.write(content)

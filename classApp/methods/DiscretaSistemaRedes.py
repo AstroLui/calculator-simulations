@@ -30,8 +30,9 @@ import simpy
 import random
 
 class Redes():
+    _resultText: str
     def __init__(self, semilla:int=42, cap_servidor:int=1,cap_cola:int=5,t_pros_min:int=2,
-                 t_pros_max:int=5,t_llegadas:int=3,t_paquetes:int=50):
+                 t_pros_max:int=5,t_llegadas:int=3,t_paquetes:int=50) -> None:
         self.SEMILLA = semilla
         self.CAPACIDAD_SERVIDOR = cap_servidor
         self.CAPACIDAD_COLA = cap_cola
@@ -45,14 +46,14 @@ class Redes():
         self.paquetes_procesados = 0
         self.log = []
 
-    def reset(self):
+    def reset(self) -> None:
         self.paquetes_perdidos = 0
         self.tiempo_total_espera = 0
         self.paquetes_procesados = 0
         self.log = []
 
     # Función para simular el proceso de un paquete
-    def paquete(self, env, nombre, servidor):
+    def paquete(self, env, nombre, servidor) -> None:
         llegada = env.now  # Momento de llegada del paquete al sistema
         self.log.append(f'{nombre} llega al servidor en el segundo {llegada:.2f}')
 
@@ -82,14 +83,14 @@ class Redes():
 
 
     # Función para la llegada de paquetes
-    def llegada_paquetes(self,env, servidor):
+    def llegada_paquetes(self,env, servidor) -> None:
         """Genera la llegada de paquetes al servidor."""
         for i in range(self.TOTAL_PAQUETES):
             yield env.timeout(random.expovariate(
                 1.0 / self.TIEMPO_LLEGADAS))  # Tiempo entre llegadas de paquetes
             env.process(self.paquete(env, f'Paquete {i+1}', servidor))
 
-    def result(self):
+    def result(self) -> None:
         # Configuración y ejecución de la simulación
         self.reset()
         random.seed(self.SEMILLA)  # Establece la semilla para reproducir resultados
@@ -103,11 +104,18 @@ class Redes():
         tiempoPromedioEspera = self.tiempo_total_espera / self.paquetes_procesados if self.paquetes_procesados > 0 else 0
         utilizacionServidor = 100 * (self.paquetes_procesados * (self.TIEMPO_PROCESAMIENTO_MIN + self.TIEMPO_PROCESAMIENTO_MAX) / 2) / env.now if env.now > 0 else 0
 
+        self._resultText = f"""
+        Total de paquetes simulados: {self.TOTAL_PAQUETES}
+        Paquetes procesados: {self.paquetes_procesados}
+        Paquetes perdidos: {self.paquetes_perdidos}
+        Tasa de pérdida de paquetes: {tasaDePerdida:.2f}%
+        Tiempo promedio de espera de los paquetes: {tiempoPromedioEspera:.2f} segundos
+        Utilización del servidor: {utilizacionServidor:.2f}%
+        """
         # Salidas de la simulación
-        return self.TOTAL_PAQUETES, self.paquetes_procesados, self.paquetes_perdidos, tasaDePerdida, tiempoPromedioEspera, utilizacionServidor, self.log
-    
+            
     def set_atr(self,semilla:int, cap_servidor:int,cap_cola:int,t_pros_min:int,
-                 t_pros_max:int,t_llegadas:int,t_paquetes:int):
+                 t_pros_max:int,t_llegadas:int,t_paquetes:int) -> None:
         self.SEMILLA = semilla
         self.CAPACIDAD_SERVIDOR = cap_servidor
         self.CAPACIDAD_COLA = cap_cola
@@ -115,3 +123,9 @@ class Redes():
         self.TIEMPO_PROCESAMIENTO_MAX = t_pros_max
         self.TIEMPO_LLEGADAS = t_llegadas
         self.TOTAL_PAQUETES = t_paquetes
+
+    def getResultText(self) -> None:
+        return self._resultText
+    
+    def getLog(self) -> None:
+        return self.log

@@ -18,6 +18,7 @@ class Peluqueria(metaclass=SingletonMeta):
   te: float #tiempo de espera total
   dt: float#duracion del servicio
   fin:float#minuto en que finaliza
+  _resultText: str
 
   def __init__(self, semilla: int=30, num_peluqueros: int=1, tiempo_corte_min: float=15, tiempo_corte_max: float=30, t_llegadas: float=20, tot_clientes: int=5) -> None:
     self.semilla = semilla
@@ -43,8 +44,9 @@ class Peluqueria(metaclass=SingletonMeta):
       random.seed(self.semilla)
       self.env = simpy.Environment()
       self.personal = simpy.Resource(self.env, self.num_peluqueros)
+      
   #procedimientos
-  def  cortar(self, cliente):
+  def cortar(self, cliente) -> None:
     R = random.random()
     tiempo = self.tiempo_corte_max - self.tiempo_corte_min
     tiempo_corte = self.tiempo_corte_min + (tiempo*R) #dist Uniforme
@@ -52,7 +54,7 @@ class Peluqueria(metaclass=SingletonMeta):
     self.log.append("Corte listo a %s en %.2f minutos" % (cliente, tiempo_corte))
     self.dt += tiempo_corte #acumular tiempo de uso de la instalacion
 
-  def cliente(self, name):
+  def cliente(self, name) -> None:
     llega = self.env.now # guarda el minuto de llegada del cliente 
     self.log.append("--> %s llegó a la peluqueria en el minuto %.2f" % (name, llega))
     with self.personal.request() as request: # espera turno
@@ -63,11 +65,11 @@ class Peluqueria(metaclass=SingletonMeta):
         self.log.append("%s Pasa y espera en la peluqueria en el minuto %.2f habiendo esperado %.2f" % (name, pasa, espera))
         yield self.env.process(self.cortar(name)) # llamar al proceso cortar
         deja = self.env.now # momento en que el cliente deja la peluquería
-        self.log.append("<--%s deja la peluqueria en minuto %.2f" % (name, deja))
+        self.log.append("<-- %s deja la peluqueria en minuto %.2f" % (name, deja))
         self.fin = deja # guardo el minuto en que termina
 
 
-  def principal(self):
+  def principal(self) -> None:
     llegada = 0
     i = 0
     for i in range(self.tot_clientes):
@@ -77,14 +79,14 @@ class Peluqueria(metaclass=SingletonMeta):
       i=i+1
       self.env.process(self.cliente('cliente %d' % i))
 
-  def result(self):
-          self.reset()
-          self.env.process(self.principal())
-          self.env.run()
-          lpc = self.te / self.fin
-          tep = self.te / self.tot_clientes
-          upi = (self.dt / self.fin) / self.num_peluqueros
-          return lpc, tep, upi, self.log
+  def result(self) -> None:
+      self.reset()
+      self.env.process(self.principal())
+      self.env.run()
+      lpc = self.te / self.fin
+      tep = self.te / self.tot_clientes
+      upi = (self.dt / self.fin) / self.num_peluqueros
+      self._resultText = f"LPC: {lpc:.2f} \nTEP: {tep:.2f} \nUPI: {upi:.2f}"
 
   def set_atr(self, semilla: int, num_peluqueros: int, tiempo_corte_min: float, tiempo_corte_max: float, t_llegadas: float, tot_clientes: int):
     self.semilla = semilla
@@ -93,6 +95,12 @@ class Peluqueria(metaclass=SingletonMeta):
     self.tiempo_corte_max = tiempo_corte_max
     self.t_llegadas = t_llegadas
     self.tot_clientes = tot_clientes
+
+  def getResultText(self) -> str: 
+    return self._resultText
+    
+  def getLog(self) -> []:
+    return self.log
 
 if __name__ == '__main__':
     p1 = Peluqueria()

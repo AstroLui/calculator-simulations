@@ -10,7 +10,7 @@ class Restaurante2(metaclass=SingletonMeta):
     TIEMPO_LLEGADAS:int  # Tiempo promedio entre la llegada de clientes (minutos)
     TOTAL_CLIENTES:int# Total de clientes a simular
 
-    def __init__(self, semilla: int=42, num_mesas: int=5, tiempo_comer_min:int=20, tiempo_comer_max:int=40, tiempo_llegadas:int=10, total_clientes:int=10):
+    def __init__(self, semilla: int=42, num_mesas: int=5, tiempo_comer_min:int=20, tiempo_comer_max:int=40, tiempo_llegadas:int=10, total_clientes:int=10) -> None:
         self.SEMILLA = semilla
         self.NUM_MESAS = num_mesas
         self.TIEMPO_COMER_MIN = tiempo_comer_min
@@ -20,7 +20,7 @@ class Restaurante2(metaclass=SingletonMeta):
         self.log = []
 
     # Función para simular el proceso de un cliente
-    def cliente(self, env, nombre, restaurante):
+    def cliente(self, env, nombre, restaurante) -> None:
         """Simula el proceso de un cliente que llega, espera una mesa, come y luego se va."""
         self.log.append(f'{nombre} llega al restaurante en el minuto {env.now:.2f}')
 
@@ -38,7 +38,7 @@ class Restaurante2(metaclass=SingletonMeta):
 
 
     # Función para la llegada de clientes
-    def llegada_clientes(self, env, restaurante):
+    def llegada_clientes(self, env, restaurante) -> None:
         """Genera la llegada de clientes al restaurante."""
         for i in range(self.TOTAL_CLIENTES):
             # Cada cliente llega al restaurante
@@ -47,7 +47,7 @@ class Restaurante2(metaclass=SingletonMeta):
             )  # Distribución exponencial para el tiempo entre llegadas
             env.process(self.cliente(env, f'Cliente {i+1}', restaurante))
 
-    def result(self):
+    def result(self) -> None:
         self.log = []
         # Configuración y ejecución de la simulación
         random.seed(self.SEMILLA)  # Establece la semilla para reproducir resultados
@@ -58,12 +58,14 @@ class Restaurante2(metaclass=SingletonMeta):
             env, restaurante))  # Inicia el proceso de llegada de clientes
         env.run()  # Ejecuta la simulación
 
-        return self.log
     
-    def set_atr(self,semilla: int, num_mesas: int, tiempo_comer_min:int, tiempo_comer_max:int, tiempo_llegadas:int, total_clientes:int):
+    def set_atr(self,semilla: int, num_mesas: int, tiempo_comer_min:int, tiempo_comer_max:int, tiempo_llegadas:int, total_clientes:int) -> None:
         self.SEMILLA = semilla
         self.NUM_MESAS = num_mesas
         self.TIEMPO_COMER_MIN = tiempo_comer_min
         self.TIEMPO_COMER_MAX = tiempo_comer_max
         self.TIEMPO_LLEGADAS = tiempo_llegadas
         self.TOTAL_CLIENTES = total_clientes
+
+    def getLog(self) -> []:
+        return self.log 
