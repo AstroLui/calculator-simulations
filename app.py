@@ -227,14 +227,14 @@ def main(page: ft.Page) -> None:
             field_7 = Field('Total de paquetes', 250, value='50')
             def _(e) -> None:
                 try:
-                    REDES.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), int(field_6.getValue()), int(field_7.getValue()))
+                    REDES.set_atr(int(field_1.getValue()), int(field_2.getValue()), int(field_3.getValue()), int(field_4.getValue()), int(field_5.getValue()), float(field_6.getValue()), int(field_7.getValue()))
                     REDES.result()
                     results = [ft.Text(REDES.getResultText(), color=COLOR_SECOND)]
                     for i in REDES.getLog():
                         results.append(ft.Text(i, color=COLOR_SECOND))
                     createTXT(REDES.getLog(), 'SIMULACION REDES')
                     modal.openModal(page,'Simulación de Red de Computadoras', results)
-                    createTXT(REDE.getResultText())
+                    createTXT(REDES.getResultText())
 
                 except ValueError:
                     alert.openAlert(page, "Error: Por favor, ingrese valores numéricos válidos.")

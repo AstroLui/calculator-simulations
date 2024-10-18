@@ -32,7 +32,7 @@ import random
 class Redes():
     _resultText: str
     def __init__(self, semilla:int=42, cap_servidor:int=1,cap_cola:int=5,t_pros_min:int=2,
-                 t_pros_max:int=5,t_llegadas:int=3,t_paquetes:int=50) -> None:
+                 t_pros_max:int=5,t_llegadas:float=3,t_paquetes:int=50) -> None:
         self.SEMILLA = semilla
         self.CAPACIDAD_SERVIDOR = cap_servidor
         self.CAPACIDAD_COLA = cap_cola
@@ -115,7 +115,7 @@ class Redes():
         # Salidas de la simulación
             
     def set_atr(self,semilla:int, cap_servidor:int,cap_cola:int,t_pros_min:int,
-                 t_pros_max:int,t_llegadas:int,t_paquetes:int) -> None:
+                 t_pros_max:int,t_llegadas:float,t_paquetes:int) -> None:
         self.SEMILLA = semilla
         self.CAPACIDAD_SERVIDOR = cap_servidor
         self.CAPACIDAD_COLA = cap_cola
